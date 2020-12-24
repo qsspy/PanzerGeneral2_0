@@ -8,7 +8,7 @@
         mc:Ignorable="d"
         Title="MainWindow" Height="600" Width="800">
     <Grid>
-        <unit:Infantry HorizontalAlignment="Left" Height="50" Margin="337,222,0,0" VerticalAlignment="Top" Width="50"/>
+        <unit:Infantry HorizontalAlignment="Left" Height="100" Margin="100,222,0,0" VerticalAlignment="Top" Width="100"/>
 
 
     </Grid>
