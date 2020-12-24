@@ -10,6 +10,5 @@
     <Grid>
         <unit:Infantry HorizontalAlignment="Left" Height="100" Margin="100,222,0,0" VerticalAlignment="Top" Width="100"/>
 
-
     </Grid>
 </Window>
