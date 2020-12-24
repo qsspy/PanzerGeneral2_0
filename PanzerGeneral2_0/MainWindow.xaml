@@ -4,9 +4,12 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:PanzerGeneral2_0"
+        xmlns:unit="clr-namespace:PanzerGeneral2_0.Controls.Units"
         mc:Ignorable="d"
-        Title="MainWindow" Height="450" Width="300">
+        Title="MainWindow" Height="600" Width="800">
     <Grid>
-        
+        <unit:Infantry HorizontalAlignment="Left" Height="50" Margin="337,222,0,0" VerticalAlignment="Top" Width="50"/>
+
+
     </Grid>
 </Window>
