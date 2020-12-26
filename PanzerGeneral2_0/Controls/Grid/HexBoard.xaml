@@ -2,13 +2,14 @@
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:items="clr-namespace:PanzerGeneral2_0.Controls.Grid"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:hx="clr-namespace:HexGridControl;assembly=HexGridControl"
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800">
     <Grid>
         <hx:HexList Name="Board" Margin="5"
-                    RowCount="10" ColumnCount="12" >
+                    RowCount="4" ColumnCount="4" >
             <hx:HexList.ItemContainerStyle>
                 <Style TargetType="{x:Type hx:HexItem}">
                     <Setter Property="Grid.Row" Value="{Binding Path=Y}"/>
@@ -20,11 +21,7 @@
             </hx:HexList.ItemContainerStyle>
             <hx:HexList.ItemTemplate>
                 <DataTemplate>
-                    <TextBlock>                                
-                                <Run Text="{Binding Path=Y, Mode=OneWay}"/>
-                                <Run Text=","/>
-                                <Run Text="{Binding Path=X, Mode=OneWay}"/>
-                    </TextBlock>
+                    <items:HexItemControl />
                 </DataTemplate>
             </hx:HexList.ItemTemplate>
         </hx:HexList>

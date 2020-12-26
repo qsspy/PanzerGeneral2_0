@@ -24,7 +24,7 @@
             </Viewbox>
         </Border>
         <Grid.Background>
-            <ImageBrush  Stretch="Uniform" ImageSource="pack://siteoforigin:,,,/Resources/cannon.png" />
+            <ImageBrush  Stretch="Uniform" ImageSource="/PanzerGeneral2_0;component/Resources/cannon.png" />
         </Grid.Background>
     </Grid>
 </unit:Unit>
