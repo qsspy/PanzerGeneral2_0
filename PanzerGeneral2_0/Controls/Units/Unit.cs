@@ -43,7 +43,6 @@ namespace PanzerGeneral2_0.Controls.Units
         public int Hp { get; set; }
 
 
-        public Unit()
-        {}
+        public Unit() {}
     }
 }
