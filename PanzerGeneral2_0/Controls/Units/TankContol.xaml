@@ -24,7 +24,7 @@
             </Viewbox>
         </Border>
         <Grid.Background>
-            <ImageBrush  Stretch="Uniform" ImageSource="pack://siteoforigin:,,,/Resources/tank.png" >
+            <ImageBrush  Stretch="Uniform" ImageSource="/PanzerGeneral2_0;component/Resources/tank.png" >
                 <ImageBrush.RelativeTransform>
                     <TransformGroup>
                         <ScaleTransform CenterY="0.5" CenterX="0.5" ScaleX="-1"/>

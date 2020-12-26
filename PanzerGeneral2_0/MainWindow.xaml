@@ -6,12 +6,11 @@
         xmlns:unit ="clr-namespace:PanzerGeneral2_0.Controls.Units" 
         xmlns:hex="clr-namespace:PanzerGeneral2_0.Controls.Grid"
         mc:Ignorable="d"
-        Title="MainWindow" 
-        WindowState="Maximized" ResizeMode="NoResize">
+        Title="MainWindow" >
     <Grid>
-        <hex:HexBoard>
-            <!--<unit:Infantry />-->
-        </hex:HexBoard>
+        <hex:HexBoard />
+        <!--<unit:Infantry />-->
+        <!--<hex:HexItemControl />-->
 
     </Grid>
 </Window>
