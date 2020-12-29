@@ -18,7 +18,7 @@
             <RowDefinition Height="1*"/>
             <RowDefinition Height="0.5*"/>
         </Grid.RowDefinitions>
-        <Border Background="AliceBlue" Grid.Row="1" Grid.Column="1">
+        <Border Background="{Binding Path=HpLabelColor, Mode=TwoWay}" Grid.Row="1" Grid.Column="1">
             <Viewbox  Stretch="Uniform" >
                 <TextBox Text="{Binding Path=Hp, Mode=TwoWay}" Background="Transparent" x:Name="HpField" BorderThickness="0" IsReadOnly="True"/>
             </Viewbox>
@@ -27,13 +27,12 @@
             <ImageBrush  Stretch="Uniform" ImageSource="/PanzerGeneral2_0;component/Resources/tank.png" >
                 <ImageBrush.RelativeTransform>
                     <TransformGroup>
-                        <ScaleTransform CenterY="0.5" CenterX="0.5" ScaleX="-1"/>
+                        <ScaleTransform CenterY="0.5" CenterX="0.5" ScaleX="{Binding Path=Scale, Mode=TwoWay}"/>
                         <SkewTransform CenterY="0.5" CenterX="0.5"/>
                         <RotateTransform CenterY="0.5" CenterX="0.5"/>
                         <TranslateTransform/>
                     </TransformGroup>
                 </ImageBrush.RelativeTransform>
-
             </ImageBrush>
         </Grid.Background>
     </Grid>

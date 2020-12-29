@@ -18,12 +18,12 @@ namespace PanzerGeneral2_0.Controls.Units
     /// <summary>
     /// Logika interakcji dla klasy Infantry.xaml
     /// </summary>
-    public partial class Infantry : Unit
+    public partial class InfantryControl : Unit
     {
-        public Infantry()
+        public InfantryControl(TeamInfo team) : base(team)
         {
             DataContext = this;
-            TeamCode = TeamInfo.TEAM_A;
+            TeamCode = team;
             UnitKind = UnitInfo.INFANTRY;
             MaxAmmo = 10;
             CurrentAmmo = 10;
@@ -39,6 +39,7 @@ namespace PanzerGeneral2_0.Controls.Units
             MoveRange = 5;
             AttackRange = 1;
             Hp = 50;
+
             InitializeComponent();
         }
     }
