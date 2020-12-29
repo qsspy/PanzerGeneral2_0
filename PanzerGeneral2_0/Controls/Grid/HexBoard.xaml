@@ -16,6 +16,7 @@
                     <Setter Property="Grid.Row" Value="{Binding Path=Point.Y}"/>
                     <Setter Property="Grid.Column" Value="{Binding Path=Point.X}"/>
                     <Setter Property="BorderThickness" Value="1.5"/>
+                    <Setter Property="Content" Value="{Binding Path=Unit}"/>
                     <Setter Property="Background" >
                         <Setter.Value>
                             <ImageBrush ImageSource="{Binding Path=ImageSource}" />
@@ -23,12 +24,6 @@
                     </Setter>
                 </Style>
             </hx:HexList.ItemContainerStyle>
-            <hx:HexList.ItemTemplate>
-                <DataTemplate>
-                    <!--TODO: Zaimplementować to co będzie wyświetlane na powierzchni tła, np:-->
-                    <units:Infantry Width="100" Height="75" />
-                </DataTemplate>
-            </hx:HexList.ItemTemplate>
         </hx:HexList>
     </Grid>
 </UserControl>

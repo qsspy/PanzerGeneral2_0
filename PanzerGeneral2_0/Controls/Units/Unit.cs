@@ -9,6 +9,13 @@ namespace PanzerGeneral2_0.Controls.Units
 {
     public abstract class Unit : UserControl
     {
+
+        public static int DEFAULT_UNIT_HEIGHT = 80;
+        public static int DEFAULT_UNIT_WIDTH = 80;
+
+        public static string TEAM_A_COLOR_CODE = "#FF586ACA";
+        public static string TEAM_B_COLOR_CODE = "#FFD45B5B";
+
         public enum UnitInfo
         {
             TANK,
@@ -24,6 +31,11 @@ namespace PanzerGeneral2_0.Controls.Units
             TEAM_A,
             TEAM_B
         }
+
+        //Do odwracania tekstury
+        public int Scale { get; set; }
+        public string HpLabelColor { get; set; }
+
 
         public TeamInfo TeamCode { get; set; }
         public UnitInfo UnitKind { get; set; }
@@ -43,6 +55,21 @@ namespace PanzerGeneral2_0.Controls.Units
         public int Hp { get; set; }
 
 
-        public Unit() {}
+        public Unit(TeamInfo team) 
+        {
+            TeamCode = team;
+
+            if (TeamCode == TeamInfo.TEAM_A)
+            {
+                Scale = 1;
+                HpLabelColor = TEAM_A_COLOR_CODE;
+            } 
+            else
+            {
+                Scale = -1;
+                HpLabelColor = TEAM_B_COLOR_CODE;
+            }
+            
+        }
     }
 }

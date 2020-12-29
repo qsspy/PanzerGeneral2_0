@@ -66,7 +66,7 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Controls\Units\Cannon.xaml">
+    <Page Include="Controls\Units\CannonControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -93,8 +93,8 @@
     </Compile>
     <Compile Include="Controls\Grid\HexPoint.cs" />
     <Compile Include="Controls\Grid\Helpers\IntPoint.cs" />
-    <Compile Include="Controls\Units\Cannon.xaml.cs">
-      <DependentUpon>Cannon.xaml</DependentUpon>
+    <Compile Include="Controls\Units\CannonControl.xaml.cs">
+      <DependentUpon>CannonControl.xaml</DependentUpon>
     </Compile>
     <Compile Include="Controls\Units\InfantryControl.xaml.cs">
       <DependentUpon>InfantryControl.xaml</DependentUpon>
@@ -103,6 +103,7 @@
       <DependentUpon>TankContol.xaml</DependentUpon>
     </Compile>
     <Compile Include="Controls\Units\Unit.cs" />
+    <Compile Include="Factories\UnitFactory.cs" />
     <Compile Include="MainWindow.xaml.cs">
       <DependentUpon>MainWindow.xaml</DependentUpon>
       <SubType>Code</SubType>
@@ -145,13 +146,19 @@
     <Resource Include="Resources\plain.png" />
   </ItemGroup>
   <ItemGroup>
-    <Resource Include="Resources\tank.png" />
-  </ItemGroup>
-  <ItemGroup>
     <Resource Include="Resources\cannon.png" />
   </ItemGroup>
   <ItemGroup>
     <Resource Include="Resources\soldier.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\terrain_distribution.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\unit_distribution.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\tank.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
