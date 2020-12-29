@@ -30,7 +30,7 @@ namespace PanzerGeneral2_0.Controls.Grid.Helpers
         /// <param name="size">Board dimensions</param>
         /// <param name="origin">Current hex coordinates</param>
         /// <param name="dir">Direction</param>
-        public HexPoint? GetNextHex(IntSize size, HexPoint origin, HexDirection dir)
+        public IntPoint? GetNextHex(IntSize size, IntPoint origin, HexDirection dir)
         {
             if (IsHorizontal)
                 return GetNextHexHorizontal(size, origin, dir);
@@ -43,7 +43,7 @@ namespace PanzerGeneral2_0.Controls.Grid.Helpers
         /// </summary>
         /// <param name="size">Board dimensions</param>
         /// <param name="origin">Current hex coordinates</param>        
-        public IEnumerable<HexPoint> GetNeighbours(IntSize size, HexPoint origin)
+        public IEnumerable<IntPoint> GetNeighbours(IntSize size, IntPoint origin)
         {
             for (int index = 0; index < _directions.Length; index++)
             {
@@ -62,17 +62,17 @@ namespace PanzerGeneral2_0.Controls.Grid.Helpers
         /// <param name="origin">Current hex coordinates</param> 
         /// <param name="predicate">Search criteria</param>
         /// <returns></returns>
-        public IEnumerable<HexPoint> GetArea(IntSize size, HexPoint origin, Func<HexPoint, bool> predicate)
+        public IEnumerable<IntPoint> GetArea(IntSize size, IntPoint origin, Func<IntPoint, bool> predicate)
         {
             if (false == predicate(origin))
                 yield break;
             int idx = 0;
 
-            var points = new List<HexPoint>();
+            var points = new List<IntPoint>();
             points.Add(origin);
             do
             {
-                HexPoint p = points[idx];
+                IntPoint p = points[idx];
                 yield return p;
                 foreach (var point in GetNeighbours(size, p).Where(predicate))
                 {
@@ -90,9 +90,9 @@ namespace PanzerGeneral2_0.Controls.Grid.Helpers
         /// <param name="size">Board dimensions</param>
         /// <param name="origin">Current hex coordinates</param>
         /// <param name="dir">Direction</param>        
-        public IEnumerable<HexPoint> GetRay(IntSize size, HexPoint origin, HexDirection dir)
+        public IEnumerable<IntPoint> GetRay(IntSize size, IntPoint origin, HexDirection dir)
         {
-            HexPoint? next;
+            IntPoint? next;
             do
             {
                 next = GetNextHex(size, origin, dir);
@@ -105,13 +105,13 @@ namespace PanzerGeneral2_0.Controls.Grid.Helpers
             while (next != null);
         }
 
-        public bool IsNeigbour(HexPoint neighbour, IntSize size, HexPoint origin)
+        public bool IsNeigbour(IntPoint neighbour, IntSize size, IntPoint origin)
         {
             var nb = GetNeighbours(size, origin);
             return nb.Any(p => p == neighbour);
         }
 
-        private HexPoint? GetNextHexHorizontal(IntSize size, HexPoint origin, HexDirection dir)
+        private IntPoint? GetNextHexHorizontal(IntSize size, IntPoint origin, HexDirection dir)
         {
             if (dir == HexDirection.Left || dir == HexDirection.Right)
                 return null;
@@ -172,11 +172,11 @@ namespace PanzerGeneral2_0.Controls.Grid.Helpers
             }
 
             if (row >= 0 && row < rows && column >= 0 && column <= columns)
-                return new HexPoint(row, column);
+                return new IntPoint(row, column);
             return null;
         }
 
-        private HexPoint? GetNextHexVertical(IntSize size, HexPoint origin, HexDirection dir)
+        private IntPoint? GetNextHexVertical(IntSize size, IntPoint origin, HexDirection dir)
         {
             if (dir == HexDirection.Up || dir == HexDirection.Down)
                 return null;
@@ -233,7 +233,7 @@ namespace PanzerGeneral2_0.Controls.Grid.Helpers
             }
 
             if (row >= 0 && row < rows && column >= 0 && column <= columns)
-                return new HexPoint(row, column);
+                return new IntPoint(row, column);
             return null;
         }
     }

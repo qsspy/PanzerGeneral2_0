@@ -14,7 +14,9 @@ namespace PanzerGeneral2_0.Controls.Grid
             Board.ItemsSource =
                 Enumerable.Range(0, Board.RowCount)
                     .SelectMany(r => Enumerable.Range(0, Board.ColumnCount)
-                        .Select(c => new HexPoint(c, r)))
+                        .Select(c =>  new HexPoint(
+                            new IntPoint(c, r), 
+                            "/PanzerGeneral2_0;component/Resources/plain.png")))    // TODO: Implementacja fabryki?
                     .ToList();
         }
     }
