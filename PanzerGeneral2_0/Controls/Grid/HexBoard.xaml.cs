@@ -14,7 +14,7 @@ namespace PanzerGeneral2_0.Controls.Grid
             Board.ItemsSource =
                 Enumerable.Range(0, Board.RowCount)
                     .SelectMany(r => Enumerable.Range(0, Board.ColumnCount)
-                        .Select(c => new IntPoint(c, r)))
+                        .Select(c => new HexPoint(c, r)))
                     .ToList();
         }
     }
