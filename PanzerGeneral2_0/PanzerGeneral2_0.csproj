@@ -66,10 +66,6 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Controls\Grid\HexItemControl.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
     <Page Include="Controls\Units\Cannon.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -96,9 +92,7 @@
       <DependentUpon>HexBoard.xaml</DependentUpon>
     </Compile>
     <Compile Include="Controls\Grid\HexPoint.cs" />
-    <Compile Include="Controls\Grid\HexItemControl.xaml.cs">
-      <DependentUpon>HexItemControl.xaml</DependentUpon>
-    </Compile>
+    <Compile Include="Controls\Grid\Helpers\IntPoint.cs" />
     <Compile Include="Controls\Units\Cannon.xaml.cs">
       <DependentUpon>Cannon.xaml</DependentUpon>
     </Compile>

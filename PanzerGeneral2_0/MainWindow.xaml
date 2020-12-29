@@ -10,8 +10,6 @@
         ResizeMode="NoResize" WindowState="Maximized">
     <Grid>
         <hex:HexBoard />
-        <!--<unit:Infantry />-->
-        <!--<hex:HexItemControl />-->
 
     </Grid>
 </Window>
