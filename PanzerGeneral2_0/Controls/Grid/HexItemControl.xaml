@@ -7,9 +7,9 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:PanzerGeneral2_0.Controls.Grid" 
              xmlns:units="clr-namespace:PanzerGeneral2_0.Controls.Units"
-             mc:Ignorable="d" 
-             d:DesignHeight="450" d:DesignWidth="800">
+             mc:Ignorable="d" Width="150" Height="100"
+                Background="White">
     <Grid>
-        <units:Cannon Width="200" Height="300"/>
+        <units:Cannon Width="100" Height="75" />
     </Grid>
 </hexgridcontrol:HexItem>

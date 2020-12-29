@@ -6,7 +6,8 @@
         xmlns:unit ="clr-namespace:PanzerGeneral2_0.Controls.Units" 
         xmlns:hex="clr-namespace:PanzerGeneral2_0.Controls.Grid"
         mc:Ignorable="d"
-        Title="MainWindow" >
+        Title="MainWindow" 
+        ResizeMode="NoResize" WindowState="Maximized">
     <Grid>
         <hex:HexBoard />
         <!--<unit:Infantry />-->
