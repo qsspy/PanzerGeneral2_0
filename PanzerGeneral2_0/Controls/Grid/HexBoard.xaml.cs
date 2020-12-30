@@ -6,6 +6,7 @@ using System.IO;
 using HexGridControl;
 using PanzerGeneral2_0.Factories;
 using PanzerGeneral2_0.Controls.Units;
+using System.Windows;
 
 namespace PanzerGeneral2_0.Controls.Grid
 {
@@ -107,6 +108,13 @@ namespace PanzerGeneral2_0.Controls.Grid
             }
 
             Board.ItemsSource = hexPoints;
+        }
+
+        private void HexItem_PreviewMouseLeftButtonDown(object sender, System.Windows.Input.MouseButtonEventArgs e)
+        {
+            //Console.WriteLine(Board.ItemContainerGenerator.IndexFromContainer((HexItem) sender));    
+            var index = Board.ItemContainerGenerator.IndexFromContainer((HexItem)sender);
+            Console.WriteLine(hexPoints[index].Point.X + " " + hexPoints[index].Point.Y);
         }
     }
 }
