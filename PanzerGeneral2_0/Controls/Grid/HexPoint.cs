@@ -1,10 +1,11 @@
-﻿using PanzerGeneral2_0.Controls.Units;
-using System;
+﻿using HexGridControl;
+using PanzerGeneral2_0.Controls.Units;
 
 namespace PanzerGeneral2_0.Controls.Grid
 {
     public class HexPoint
     {
+
         public enum HexPointTerrainInfo
         {
             PLAIN,

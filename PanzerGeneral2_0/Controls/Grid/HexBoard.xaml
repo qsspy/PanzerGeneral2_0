@@ -22,6 +22,9 @@
                             <ImageBrush ImageSource="{Binding Path=ImageSource}" />
                         </Setter.Value>
                     </Setter>
+                    <EventSetter
+                        Event="PreviewMouseLeftButtonDown"
+                        Handler="HexItem_PreviewMouseLeftButtonDown" />
                 </Style>
             </hx:HexList.ItemContainerStyle>
         </hx:HexList>
