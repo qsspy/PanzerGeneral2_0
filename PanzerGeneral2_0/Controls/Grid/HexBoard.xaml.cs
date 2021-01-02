@@ -1,12 +1,11 @@
-﻿using System;
+﻿using HexGridControl;
+using PanzerGeneral2_0.Controls.Grid.Helpers;
+using PanzerGeneral2_0.Controls.Units;
+using PanzerGeneral2_0.Factories;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Windows.Controls;
-using System.IO;
-using HexGridControl;
-using PanzerGeneral2_0.Factories;
-using PanzerGeneral2_0.Controls.Units;
-using System.Windows;
 
 namespace PanzerGeneral2_0.Controls.Grid
 {
@@ -17,19 +16,13 @@ namespace PanzerGeneral2_0.Controls.Grid
     {
 
         private List<HexPoint> hexPoints = new List<HexPoint>();
+        private int lastUnitChecked;    // jeśli <0 brak zaznaczonej jednostki, w p.p. indeks pola zaznaczonej jednostki
 
         public HexBoard()
         {
+            this.lastUnitChecked = -1;
             InitializeComponent();
-           //  Board.ItemsSource =
-           //     Enumerable.Range(0, Board.RowCount)
-           //          .SelectMany(r => Enumerable.Range(0, Board.ColumnCount)
-          //              .Select(c => new HexPoint(
-           //                 new IntPoint(c, r),
-           //                  "/PanzerGeneral2_0;component/Resources/plain.png")))    // TODO: Implementacja fabryki?
-           //        .ToList();
 
-           
             DistributeHexesOnBoard();
         }
 
@@ -112,9 +105,44 @@ namespace PanzerGeneral2_0.Controls.Grid
 
         private void HexItem_PreviewMouseLeftButtonDown(object sender, System.Windows.Input.MouseButtonEventArgs e)
         {
-            //Console.WriteLine(Board.ItemContainerGenerator.IndexFromContainer((HexItem) sender));    
             var index = Board.ItemContainerGenerator.IndexFromContainer((HexItem)sender);
-            Console.WriteLine(hexPoints[index].Point.X + " " + hexPoints[index].Point.Y);
+            HexPoint checkedHexPoint = hexPoints[index];
+
+            // przeniesienie jednostki jeśli kliknieto zacieniony hexpoint
+            if (checkedHexPoint.Background.Opacity == 0.5)
+            {
+                hexPoints[index].bindUnitToHex(hexPoints[lastUnitChecked].unbindUnitFromHex());
+                resetCheckedElements();
+                return;
+            }
+
+            resetCheckedElements();
+
+            // zaznaczenie możliwego zakresu ruchu
+            if (checkedHexPoint.Unit != null)
+            {
+                lastUnitChecked = index;              
+                IEnumerable<IntPoint> area = new HexArrayHelper().GetNeighbours(new IntSize(Board.ColumnCount, Board.RowCount), checkedHexPoint.Point);
+                foreach (int i in Enumerable.Range(0, hexPoints.Count))
+                {
+                    // hexpoint musi znajdować się w zasięgu i nie może zawierać innej sojuszniczej jednostki
+                    if (area.Contains(hexPoints[i].Point) && hexPoints[i].Unit == null)
+                    {
+                        hexPoints[i].Background.Opacity = 0.5;
+                    }
+                }
+            }
+        }
+
+        /**
+         * Metoda resetująca zaznaczony zakres ruchu jednostki
+         */
+        private void resetCheckedElements()
+        {
+            foreach (int i in Enumerable.Range(0, Board.Items.Count))
+            {
+                hexPoints[i].Background.Opacity = 1;
+            }
         }
     }
 }

@@ -12,7 +12,7 @@
         <hx:HexList Name="Board" Margin="5"
                     RowCount="8" ColumnCount="15" >
             <hx:HexList.ItemContainerStyle>
-                <Style TargetType="{x:Type hx:HexItem}">
+                <Style TargetType="{x:Type items:HexPoint}">
                     <Setter Property="Grid.Row" Value="{Binding Path=Point.Y}"/>
                     <Setter Property="Grid.Column" Value="{Binding Path=Point.X}"/>
                     <Setter Property="BorderThickness" Value="1.5"/>
