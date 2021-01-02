@@ -3,7 +3,7 @@ using PanzerGeneral2_0.Controls.Units;
 
 namespace PanzerGeneral2_0.Controls.Grid
 {
-    public class HexPoint
+    public class HexPoint : HexItem
     {
 
         public enum HexPointTerrainInfo
@@ -14,13 +14,13 @@ namespace PanzerGeneral2_0.Controls.Grid
         }
 
         public Unit Unit { get; set; }
-
         public HexPointTerrainInfo Terrain { get; set; }
         public string ImageSource { get; set; }
         public IntPoint Point { get; set; }
 
         public HexPoint(IntPoint point, string imageSource) 
         {
+            this.DataContext = this;
             this.Point = point;
             this.ImageSource = imageSource;
         }
@@ -39,9 +39,11 @@ namespace PanzerGeneral2_0.Controls.Grid
         /**
          Odbiera jednostkę HexItem'owi
          */
-        public void unbindUnitFromHex()
+        public Unit unbindUnitFromHex()
         {
+            Unit tempUnit = this.Unit;
             this.Unit = null;
+            return tempUnit;
         }
     }
 }
