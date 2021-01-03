@@ -7,7 +7,7 @@
         xmlns:hex="clr-namespace:PanzerGeneral2_0.Controls.Grid"
         mc:Ignorable="d"
         Title="MainWindow" 
-        ResizeMode="NoResize" WindowState="Maximized">
+        WindowState="Maximized" MinWidth="600" MinHeight="600">
     <Grid>
         <Grid.Background>
             <ImageBrush ImageSource="Resources/maroon_texture.jpg" />
