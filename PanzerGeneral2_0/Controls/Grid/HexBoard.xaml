@@ -9,8 +9,22 @@
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800">
     <Grid>
-        <hx:HexList Name="Board" Margin="5"
-                    RowCount="8" ColumnCount="15" >
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="10"/>
+            <ColumnDefinition Width="1*"/>
+            <ColumnDefinition Width="10"/>
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="10"/>
+            <RowDefinition Height="1*"/>
+            <RowDefinition Height="10"/>
+        </Grid.RowDefinitions>
+        <hx:HexList Name="Board"
+                    RowCount="8" ColumnCount="15"
+                    Grid.Column="1" Grid.Row="1">
+            <hx:HexList.Background>
+                <ImageBrush ImageSource="/PanzerGeneral2_0;component/Resources/game_background_dark.jpg"/>
+            </hx:HexList.Background>
             <hx:HexList.ItemContainerStyle>
                 <Style TargetType="{x:Type items:HexPoint}">
                     <Setter Property="Grid.Row" Value="{Binding Path=Point.Y}"/>
@@ -28,5 +42,60 @@
                 </Style>
             </hx:HexList.ItemContainerStyle>
         </hx:HexList>
+        <!-- Frame corners -->
+        <Image Grid.Column="0" Grid.Row="0" Source="/PanzerGeneral2_0;component/Resources/frame_corner.png" />
+        <Image Grid.Column="0" Grid.Row="3" Source="/PanzerGeneral2_0;component/Resources/frame_corner.png" RenderTransformOrigin="0.5,0.5" >
+            <Image.RenderTransform>
+                <TransformGroup>
+                    <ScaleTransform/>
+                    <SkewTransform/>
+                    <RotateTransform Angle="-90"/>
+                    <TranslateTransform/>
+                </TransformGroup>
+            </Image.RenderTransform>
+        </Image>
+        <Image Grid.Column="2" Grid.Row="0" Source="/PanzerGeneral2_0;component/Resources/frame_corner.png" RenderTransformOrigin="0.5,0.5" >
+            <Image.RenderTransform>
+                <TransformGroup>
+                    <ScaleTransform/>
+                    <SkewTransform/>
+                    <RotateTransform Angle="90"/>
+                    <TranslateTransform/>
+                </TransformGroup>
+            </Image.RenderTransform>
+        </Image>
+        <Image Grid.Column="2" Grid.Row="2" Source="/PanzerGeneral2_0;component/Resources/frame_corner.png" RenderTransformOrigin="0.5,0.5">
+            <Image.RenderTransform>
+                <TransformGroup>
+                    <ScaleTransform/>
+                    <SkewTransform/>
+                    <RotateTransform Angle="180"/>
+                    <TranslateTransform/>
+                </TransformGroup>
+            </Image.RenderTransform>
+        </Image>
+        <!-- Frame sides -->
+        <Image Grid.Column="0" Grid.Row="1" Source="/PanzerGeneral2_0;component/Resources/framed_side.png" Stretch="Fill"/>
+        <Image Grid.Column="1" Grid.Row="0"  Stretch="Fill" Source="/PanzerGeneral2_0;component/Resources/framed_top.png"/>
+        <Image Grid.Column="2" Grid.Row="1" Source="/PanzerGeneral2_0;component/Resources/framed_side.png" RenderTransformOrigin="0.5,0.5" Stretch="Fill">
+            <Image.RenderTransform>
+                <TransformGroup>
+                    <ScaleTransform ScaleX="-1"/>
+                    <SkewTransform/>
+                    <RotateTransform/>
+                    <TranslateTransform/>
+                </TransformGroup>
+            </Image.RenderTransform>
+        </Image>
+        <Image Grid.Column="1" Grid.Row="2" Source="/PanzerGeneral2_0;component/Resources/framed_top.png" Stretch="Fill" RenderTransformOrigin="0.5,0.5" >
+            <Image.RenderTransform>
+                <TransformGroup>
+                    <ScaleTransform ScaleX="-1"/>
+                    <SkewTransform/>
+                    <RotateTransform/>
+                    <TranslateTransform/>
+                </TransformGroup>
+            </Image.RenderTransform>
+        </Image>
     </Grid>
 </UserControl>

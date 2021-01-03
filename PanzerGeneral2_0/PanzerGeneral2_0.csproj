@@ -160,5 +160,26 @@
   <ItemGroup>
     <Resource Include="Resources\tank.png" />
   </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\frame_corner.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\framed_side.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\game_background_dark.jpg" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\framed_top.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\maroon_texture.jpg" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\board.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\metal_plate_gold.png" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
