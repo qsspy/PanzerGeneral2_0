@@ -1,5 +1,4 @@
-﻿using HexGridControl;
-using PanzerGeneral2_0.Controls.Grid.Helpers;
+﻿using PanzerGeneral2_0.Controls.Grid.Helpers;
 using PanzerGeneral2_0.Controls.Units;
 using PanzerGeneral2_0.Factories;
 using System;
@@ -9,6 +8,12 @@ using System.Windows.Controls;
 
 namespace PanzerGeneral2_0.Controls.Grid
 {
+    public static class CheckedHexPointInfo
+    {
+        public const double CHECKED = 0.5;
+        public const double NOT_CHECKED = 1;
+    }
+
     /// <summary>
     /// Logika interakcji dla klasy HexBoard.xaml
     /// </summary>
@@ -16,7 +21,7 @@ namespace PanzerGeneral2_0.Controls.Grid
     {
 
         private List<HexPoint> hexPoints = new List<HexPoint>();
-        private int lastUnitChecked;    // jeśli <0 brak zaznaczonej jednostki, w p.p. indeks pola zaznaczonej jednostki
+        private int lastUnitChecked;    // jeśli < 0 brak zaznaczonej jednostki, w p.p. indeks pola zaznaczonej jednostki
 
         public HexBoard()
         {
@@ -26,6 +31,13 @@ namespace PanzerGeneral2_0.Controls.Grid
             DistributeHexesOnBoard();
         }
 
+        /**
+         * Metoda obsługująca zdarzenie kliknięcia lewym przyciskiem myszy na hexpoint
+         */
+        private void HexItem_PreviewMouseLeftButtonDown(object sender, System.Windows.Input.MouseButtonEventArgs e)
+        {
+            SetCheckedHexPointArea((HexPoint)sender);
+        }
 
         /**
          Przypisuje HexItem'om teren oraz jednostkę opisane w plikach tekstowych
@@ -103,13 +115,15 @@ namespace PanzerGeneral2_0.Controls.Grid
             Board.ItemsSource = hexPoints;
         }
 
-        private void HexItem_PreviewMouseLeftButtonDown(object sender, System.Windows.Input.MouseButtonEventArgs e)
+        /**
+         * Metoda zaznaczająca na Board hexpointy, na które można przesunąć jednostkę
+         */
+        private void SetCheckedHexPointArea(HexPoint checkedHexPoint)
         {
-            var index = Board.ItemContainerGenerator.IndexFromContainer((HexItem)sender);
-            HexPoint checkedHexPoint = hexPoints[index];
+            var index = Board.ItemContainerGenerator.IndexFromContainer(checkedHexPoint);
 
-            // przeniesienie jednostki jeśli kliknieto zacieniony hexpoint
-            if (checkedHexPoint.Background.Opacity == 0.5)
+            // przeniesienie jednostki jeśli kliknięto zacieniony hexpoint
+            if (checkedHexPoint.Background.Opacity == CheckedHexPointInfo.CHECKED)
             {
                 hexPoints[index].bindUnitToHex(hexPoints[lastUnitChecked].unbindUnitFromHex());
                 resetCheckedElements();
@@ -121,14 +135,52 @@ namespace PanzerGeneral2_0.Controls.Grid
             // zaznaczenie możliwego zakresu ruchu
             if (checkedHexPoint.Unit != null)
             {
-                lastUnitChecked = index;              
-                IEnumerable<IntPoint> area = new HexArrayHelper().GetNeighbours(new IntSize(Board.ColumnCount, Board.RowCount), checkedHexPoint.Point);
+                lastUnitChecked = index;
+
+                //funkcja sprawdzająca istnienie hexpointa w zakresie zaznaczonej jednostki
+                Func<IntPoint, bool> selector = delegate (IntPoint hexIntPoint)
+                {
+                    int unitMoveRange = checkedHexPoint.Unit.MoveRange;
+                    int unitX = checkedHexPoint.Point.X;
+                    int unitY = checkedHexPoint.Point.Y;
+
+                    int range = (int)(Math.Sqrt(Math.Pow(hexIntPoint.X - unitX, 2) + Math.Pow(hexIntPoint.Y - unitY, 2)) + 0.5);
+                    if (range <= unitMoveRange)
+                    {
+                        return true;
+                    }
+                    return false;
+                };
+
+                //przygotowanie listy hexpointów, które należą do zakresu ruchu jednostki
+                IEnumerable<IntPoint> area = new HexArrayHelper().GetArea(
+                    new IntSize(Board.RowCount, Board.ColumnCount),
+                    checkedHexPoint.Point,
+                    selector);
+
+                // TODO: zoptymalizować
+                //IEnumerable<IntPoint> area = new HexArrayHelper().GetNeighbours(
+                //            new IntSize(Board.RowCount, Board.ColumnCount),
+                //            checkedHexPoint.Point);
+                //IEnumerable<IntPoint> tempArea = new List<IntPoint>();
+                //foreach (int i in Enumerable.Range(0, checkedHexPoint.Unit.MoveRange))
+                //{               
+                //    foreach (IntPoint intPoint in area)
+                //    {
+                //        tempArea = tempArea.Concat(new HexArrayHelper().GetNeighbours(
+                //            new IntSize(Board.RowCount, Board.ColumnCount),
+                //            intPoint));
+                //    }
+                //    area = area.Concat(tempArea);
+                //    area.Distinct().ToDictionary(point => new IntPoint(point.X, point.Y));
+                //}
+
                 foreach (int i in Enumerable.Range(0, hexPoints.Count))
                 {
                     // hexpoint musi znajdować się w zasięgu i nie może zawierać innej sojuszniczej jednostki
                     if (area.Contains(hexPoints[i].Point) && hexPoints[i].Unit == null)
                     {
-                        hexPoints[i].Background.Opacity = 0.5;
+                        hexPoints[i].Background.Opacity = CheckedHexPointInfo.CHECKED;
                     }
                 }
             }
@@ -141,7 +193,7 @@ namespace PanzerGeneral2_0.Controls.Grid
         {
             foreach (int i in Enumerable.Range(0, Board.Items.Count))
             {
-                hexPoints[i].Background.Opacity = 1;
+                hexPoints[i].Background.Opacity = CheckedHexPointInfo.NOT_CHECKED;
             }
         }
     }

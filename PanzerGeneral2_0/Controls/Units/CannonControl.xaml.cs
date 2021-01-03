@@ -36,7 +36,7 @@ namespace PanzerGeneral2_0.Controls.Units
             MediumDefenceValue = 3;
             HardDefenceValue = 1;
             Toughness = UnitInfo.SOFT;
-            MoveRange = 5;
+            MoveRange = 2;
             AttackRange = 1;
             Hp = 50;
 

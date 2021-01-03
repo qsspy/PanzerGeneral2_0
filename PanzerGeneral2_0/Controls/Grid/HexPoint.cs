@@ -32,6 +32,7 @@ namespace PanzerGeneral2_0.Controls.Grid
         public void bindUnitToHex(Unit unit)
         {
             this.Unit = unit;
+            this.Content = unit;
             this.Unit.Height = Unit.DEFAULT_UNIT_HEIGHT;
             this.Unit.Width = Unit.DEFAULT_UNIT_WIDTH;
         }
@@ -43,6 +44,7 @@ namespace PanzerGeneral2_0.Controls.Grid
         {
             Unit tempUnit = this.Unit;
             this.Unit = null;
+            this.Content = null;
             return tempUnit;
         }
     }
