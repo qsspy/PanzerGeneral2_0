@@ -6,13 +6,15 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Windows.Controls;
+using System.Windows.Input;
 using static PanzerGeneral2_0.Controls.Grid.HexPoint;
 
 namespace PanzerGeneral2_0.Controls.Grid
 {
     public static class CheckedHexPointInfo
     {
-        public const double CHECKED = 0.5;
+        public const double ATTACK_CHECKED = 0.3;
+        public const double TERRAIN_CHECKED = 0.6;
         public const double NOT_CHECKED = 1;
     }
 
@@ -39,9 +41,9 @@ namespace PanzerGeneral2_0.Controls.Grid
         /**
          * Metoda obsługująca zdarzenie kliknięcia lewym przyciskiem myszy na hexpoint
          */
-        private void HexItem_PreviewMouseLeftButtonDown(object sender, System.Windows.Input.MouseButtonEventArgs e)
+        private void HexItem_PreviewMouseButtonDown(object sender, System.Windows.Input.MouseButtonEventArgs e)
         {
-            SetCheckedHexPointArea((HexPoint)sender);
+            SetUnitAfterClickInteraction((HexPoint) sender, e.ChangedButton);
         }
 
         private void HexItem_MouseEnter(object sender, System.Windows.Input.MouseEventArgs e)
@@ -142,74 +144,116 @@ namespace PanzerGeneral2_0.Controls.Grid
         }
 
         /**
-         * Metoda zaznaczająca na Board hexpointy, na które można przesunąć jednostkę
+         * Metoda realizująca interakcję klikniętego hexpointa w zależności od użytego klawisza myszy
          */
-        private void SetCheckedHexPointArea(HexPoint checkedHexPoint)
+        private void SetUnitAfterClickInteraction(HexPoint checkedHexPoint, MouseButton mouseButton)
         {
             var index = Board.ItemContainerGenerator.IndexFromContainer(checkedHexPoint);
 
-            // przeniesienie jednostki jeśli kliknięto zacieniony hexpoint
-            if (checkedHexPoint.Background.Opacity == CheckedHexPointInfo.CHECKED)
+            if (checkedHexPoint.Background.Opacity != CheckedHexPointInfo.NOT_CHECKED)
             {
-                hexPoints[index].bindUnitToHex(hexPoints[lastUnitChecked].unbindUnitFromHex());
+                // przeniesienie jednostki jeśli kliknięto zaznaczony hexpoint terenu lewym przyciskiem myszy
+                if (checkedHexPoint.Background.Opacity == CheckedHexPointInfo.TERRAIN_CHECKED && mouseButton == MouseButton.Left)
+                {
+                    hexPoints[index].bindUnitToHex(hexPoints[lastUnitChecked].unbindUnitFromHex());
+                }
+
+                // walka jednostek jeśli kliknięto zaznaczony hexpoint z wrogą jednostką prawym przyciskiem myszy
+                else if (checkedHexPoint.Background.Opacity == CheckedHexPointInfo.ATTACK_CHECKED && mouseButton == MouseButton.Right)
+                {
+                    CombatOfUnits(hexPoints[lastUnitChecked], hexPoints[index]);
+                }
+
                 resetCheckedElements();
                 return;
-            }
+            }      
 
             resetCheckedElements();
 
-            // zaznaczenie możliwego zakresu ruchu
+            // zaznaczenie możliwych ruchów lub ataków
             if (checkedHexPoint.Unit != null)
             {
                 lastUnitChecked = index;
-
-                //funkcja sprawdzająca istnienie hexpointa w zakresie zaznaczonej jednostki
-                Func<IntPoint, bool> selector = delegate (IntPoint hexIntPoint)
-                {
-                    int unitMoveRange = checkedHexPoint.Unit.MoveRange;
-                    int unitX = checkedHexPoint.Point.X;
-                    int unitY = checkedHexPoint.Point.Y;
-
-                    int range = (int)(Math.Sqrt(Math.Pow(hexIntPoint.X - unitX, 2) + Math.Pow(hexIntPoint.Y - unitY, 2)) + 0.5);
-                    if (range <= unitMoveRange)
-                    {
-                        return true;
-                    }
-                    return false;
-                };
-
-                //przygotowanie listy hexpointów, które należą do zakresu ruchu jednostki
-                IEnumerable<IntPoint> area = new HexArrayHelper().GetArea(
-                    new IntSize(Board.RowCount, Board.ColumnCount),
-                    checkedHexPoint.Point,
-                    selector);
-
-                // TODO: zoptymalizować
-                //IEnumerable<IntPoint> area = new HexArrayHelper().GetNeighbours(
-                //            new IntSize(Board.RowCount, Board.ColumnCount),
-                //            checkedHexPoint.Point);
-                //IEnumerable<IntPoint> tempArea = new List<IntPoint>();
-                //foreach (int i in Enumerable.Range(0, checkedHexPoint.Unit.MoveRange))
-                //{               
-                //    foreach (IntPoint intPoint in area)
-                //    {
-                //        tempArea = tempArea.Concat(new HexArrayHelper().GetNeighbours(
-                //            new IntSize(Board.RowCount, Board.ColumnCount),
-                //            intPoint));
-                //    }
-                //    area = area.Concat(tempArea);
-                //    area.Distinct().ToDictionary(point => new IntPoint(point.X, point.Y));
-                //}
+                IEnumerable<IntPoint> area = GetHexPointsByRangeAndType(checkedHexPoint, mouseButton == MouseButton.Left ? checkedHexPoint.Unit.MoveRange : checkedHexPoint.Unit.AttackRange);             
 
                 foreach (int i in Enumerable.Range(0, hexPoints.Count))
                 {
-                    // hexpoint musi znajdować się w zasięgu i nie może zawierać innej sojuszniczej jednostki
-                    if (area.Contains(hexPoints[i].Point) && hexPoints[i].Unit == null)
+                    // ruch - hexpoint musi znajdować się w zasięgu i nie może zawierać innej sojuszniczej jednostki
+                    if (area.Contains(hexPoints[i].Point) && hexPoints[i].Unit == null && mouseButton == MouseButton.Left)
                     {
-                        hexPoints[i].Background.Opacity = CheckedHexPointInfo.CHECKED;
+                        hexPoints[i].Background.Opacity = CheckedHexPointInfo.TERRAIN_CHECKED;
+                    }
+
+                    // atak - hexpoint musi znajdować się w zasięgu i musi zawierać wrogą jednostkę
+                    else if (area.Contains(hexPoints[i].Point) && hexPoints[i].Unit != null && hexPoints[i].Unit.TeamCode != checkedHexPoint.Unit.TeamCode && mouseButton == MouseButton.Right)
+                    {
+                        hexPoints[i].Background.Opacity = CheckedHexPointInfo.ATTACK_CHECKED;
                     }
                 }
             }
+        }
+
+        /**
+         * Metoda realizująca walkę między dwoma jednostkami
+         */
+        private void CombatOfUnits(HexPoint attacker, HexPoint victim)
+        {
+            throw new NotImplementedException();
+        }
+
+        /**
+         * Metoda zwracająca listę hexpointów dla przekazanego hexpointa i typu interakcji
+         */
+        private IEnumerable<IntPoint> GetHexPointsByRangeAndType(HexPoint checkedHexPoint, int range)
+        {
+            /* WARIANT 1 */
+            ////funkcja sprawdzająca istnienie hexpointa w zakresie zaznaczonej jednostki
+            //Func<IntPoint, bool> selector = delegate (IntPoint hexIntPoint)
+            //{
+            //    int unitMoveRange = checkedHexPoint.Unit.MoveRange;
+            //    int unitX = checkedHexPoint.Point.X;
+            //    int unitY = checkedHexPoint.Point.Y;
+
+            //    //int x = Math.Abs(unitX - hexIntPoint.X);
+            //    //int y = Math.Abs(unitY - hexIntPoint.Y);
+            //    //int radius = (int)(Math.Sqrt(Math.Pow(x, 2) + Math.Pow(y, 2)));
+
+            //    int radius = (int)(Math.Sqrt(Math.Pow(hexIntPoint.X - unitX, 2) + Math.Pow(hexIntPoint.Y - unitY, 2)));
+
+            //    if (radius <= unitMoveRange)
+            //    {
+            //        return true;
+            //    }
+            //    return false;
+            //};
+            ////przygotowanie listy hexpointów, które należą do zakresu ruchu jednostki
+            //IEnumerable<IntPoint> area = new HexArrayHelper().GetArea(
+            //    new IntSize(Board.RowCount, Board.ColumnCount),
+            //    checkedHexPoint.Point,
+            //    selector);
+
+
+            /* WARIANT 2 */
+            // TODO: zoptymalizować
+            HexArrayHelper arrayHelper = new HexArrayHelper();
+            IEnumerable<IntPoint> area = arrayHelper.GetNeighbours(
+                            new IntSize(Board.RowCount, Board.ColumnCount),
+                            checkedHexPoint.Point);
+            IEnumerable<IntPoint> tempArea = new List<IntPoint>();
+
+            foreach (int i in Enumerable.Range(0, range - 1))
+            {
+                foreach (IntPoint intPoint in area)
+                {
+                    tempArea = tempArea.Concat(arrayHelper.GetNeighbours(
+                        new IntSize(Board.RowCount, Board.ColumnCount),
+                        intPoint));
+                }
+                area = area.Concat(tempArea);
+                area.Distinct().ToDictionary(point => new IntPoint(point.X, point.Y));
+            }
+
+            return area;
         }
 
         /**

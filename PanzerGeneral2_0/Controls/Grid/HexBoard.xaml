@@ -38,7 +38,11 @@
                     </Setter>
                     <EventSetter
                         Event="PreviewMouseLeftButtonDown"
-                        Handler="HexItem_PreviewMouseLeftButtonDown" />
+                        Handler="HexItem_PreviewMouseButtonDown" />
+                    <EventSetter 
+                        Event="PreviewMouseRightButtonDown"
+                        Handler="HexItem_PreviewMouseButtonDown"
+                        />
                     <EventSetter 
                         Event="MouseEnter"
                         Handler="HexItem_MouseEnter"/>
