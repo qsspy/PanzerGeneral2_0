@@ -1,10 +1,12 @@
 ﻿using PanzerGeneral2_0.Controls.Grid.Helpers;
 using PanzerGeneral2_0.Controls.Units;
+using PanzerGeneral2_0.CustomEventArgs;
 using PanzerGeneral2_0.Factories;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Windows.Controls;
+using static PanzerGeneral2_0.Controls.Grid.HexPoint;
 
 namespace PanzerGeneral2_0.Controls.Grid
 {
@@ -21,7 +23,10 @@ namespace PanzerGeneral2_0.Controls.Grid
     {
 
         private List<HexPoint> hexPoints = new List<HexPoint>();
+ 
         private int lastUnitChecked;    // jeśli < 0 brak zaznaczonej jednostki, w p.p. indeks pola zaznaczonej jednostki
+
+        public event EventHandler<HexItemEventArgs> HexItemMouseEnterEvent;
 
         public HexBoard()
         {
@@ -37,6 +42,22 @@ namespace PanzerGeneral2_0.Controls.Grid
         private void HexItem_PreviewMouseLeftButtonDown(object sender, System.Windows.Input.MouseButtonEventArgs e)
         {
             SetCheckedHexPointArea((HexPoint)sender);
+        }
+
+        private void HexItem_MouseEnter(object sender, System.Windows.Input.MouseEventArgs e)
+        {
+            if (sender is HexPoint)
+            {
+                var index = Board.ItemContainerGenerator.IndexFromContainer((HexPoint)sender);
+                int x = index / Board.ColumnCount;
+                int y = index % Board.ColumnCount;
+                HexPointTerrainInfo terrainInfo = hexPoints[index].Terrain;
+                HexItemEventArgs args = new HexItemEventArgs(x, y, terrainInfo);
+                args.OwnedUnit = hexPoints[index].Unit;
+
+                HexItemMouseEnterEvent?.Invoke(this, args);
+            }
+
         }
 
         /**
@@ -67,22 +88,27 @@ namespace PanzerGeneral2_0.Controls.Grid
                 foreach (int j in Enumerable.Range(0, columnCount))
                 {
                     var bgPath = "";
+                    HexPointTerrainInfo terrain;
 
                     // TODO - Mozna zastąpić fabryką
                     switch (Int32.Parse(terrainLine[j]))
                     {
                         case 0:
                             bgPath = "/PanzerGeneral2_0;component/Resources/plain.png";
+                            terrain = HexPointTerrainInfo.PLAIN;
                             break;
                         case 1:
                             bgPath = "/PanzerGeneral2_0;component/Resources/forest.png";
+                            terrain = HexPointTerrainInfo.FOREST;
                             break;
                         default:
                             bgPath = "/PanzerGeneral2_0;component/Resources/mountains.png";
+                            terrain = HexPointTerrainInfo.MOUNTAINS;
                             break;
                     }
 
                     var hexPoint = new HexPoint(new IntPoint(j, i), bgPath);
+                    hexPoint.Terrain = terrain;
 
                     switch (Int32.Parse(unitLine[j]))
                     {
