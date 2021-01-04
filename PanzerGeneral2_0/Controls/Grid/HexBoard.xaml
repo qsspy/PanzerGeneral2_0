@@ -39,6 +39,9 @@
                     <EventSetter
                         Event="PreviewMouseLeftButtonDown"
                         Handler="HexItem_PreviewMouseLeftButtonDown" />
+                    <EventSetter 
+                        Event="MouseEnter"
+                        Handler="HexItem_MouseEnter"/>
                 </Style>
             </hx:HexList.ItemContainerStyle>
         </hx:HexList>
