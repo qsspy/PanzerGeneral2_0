@@ -20,9 +20,13 @@ namespace PanzerGeneral2_0.Factories
             {
                 return new TankContol(team);
             }
+            else if (type == "Base")
+            {
+                return new MilitaryBaseControl(team);
+            }
             else
             {
-                throw new InvalidOperationException("Factory does not produce unit called \"" + type + "\"!");
+                throw new InvalidOperationException($"Factory does not produce unit called \"{type}\"!");
             }
         }
     }

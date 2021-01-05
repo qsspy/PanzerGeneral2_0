@@ -1,4 +1,4 @@
-﻿<unit:Unit x:Class="PanzerGeneral2_0.Controls.Units.CannonControl"
+﻿<unit:Unit x:Class="PanzerGeneral2_0.Controls.Units.MilitaryBaseControl"
              xmlns:unit ="clr-namespace:PanzerGeneral2_0.Controls.Units"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
@@ -6,7 +6,7 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:PanzerGeneral2_0.Controls.Units"
              mc:Ignorable="d" 
-             d:DesignHeight="100" d:DesignWidth="100">
+             d:DesignHeight="450" d:DesignWidth="800">
     <Grid>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="1*"/>
@@ -24,7 +24,7 @@
             </Viewbox>
         </Border>
         <Grid.Background>
-            <ImageBrush  Stretch="Uniform" ImageSource="{Binding Path=TexturePath,Mode=OneTime}">
+            <ImageBrush  Stretch="Uniform" ImageSource="{Binding Path=BaseTexture, Mode=OneTime}"  >
                 <ImageBrush.RelativeTransform>
                     <TransformGroup>
                         <ScaleTransform CenterY="0.5" CenterX="0.5" ScaleX="{Binding Path=Scale, Mode=TwoWay}"/>

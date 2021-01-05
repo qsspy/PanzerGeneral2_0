@@ -8,6 +8,7 @@
         public InfantryControl(TeamInfo team) : base(team)
         {
             DataContext = this;
+            TexturePath = "/PanzerGeneral2_0;component/Resources/soldier.png";
             TeamCode = team;
             UnitKind = UnitInfo.INFANTRY;
             MaxAmmo = 10;

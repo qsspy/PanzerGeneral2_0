@@ -8,6 +8,7 @@
         public CannonControl(TeamInfo team) : base(team)
         {
             DataContext = this;
+            TexturePath = "/PanzerGeneral2_0;component/Resources/cannon.png";
             TeamCode = team;
             UnitKind = UnitInfo.INFANTRY;
             MaxAmmo = 10;

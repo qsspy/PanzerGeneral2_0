@@ -19,36 +19,45 @@
             <RowDefinition Height="1*"/>
             <RowDefinition Height="10"/>
         </Grid.RowDefinitions>
-        <hx:HexList Name="Board"
-                    RowCount="8" ColumnCount="15"
-                    Grid.Column="1" Grid.Row="1">
-            <hx:HexList.Background>
+        <!-- game window-->
+        <ScrollViewer Grid.Column="1" Grid.Row="1" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Auto">
+            <ScrollViewer.Background>
                 <ImageBrush ImageSource="/PanzerGeneral2_0;component/Resources/game_background_dark.jpg"/>
-            </hx:HexList.Background>
-            <hx:HexList.ItemContainerStyle>
-                <Style TargetType="{x:Type items:HexPoint}">
-                    <Setter Property="Grid.Row" Value="{Binding Path=Point.Y}"/>
-                    <Setter Property="Grid.Column" Value="{Binding Path=Point.X}"/>
-                    <Setter Property="BorderThickness" Value="1.5"/>
-                    <Setter Property="Content" Value="{Binding Path=Unit}"/>
-                    <Setter Property="Background" >
-                        <Setter.Value>
-                            <ImageBrush ImageSource="{Binding Path=ImageSource}" />
-                        </Setter.Value>
-                    </Setter>
-                    <EventSetter
+            </ScrollViewer.Background>
+            <hx:HexList Name="Board"
+                    RowCount="15" ColumnCount="15"
+                    HorizontalAlignment="Center" VerticalAlignment="Center">
+                <hx:HexList.ItemContainerStyle>
+                    <Style TargetType="{x:Type items:HexPoint}">
+                        <Setter Property="Height" Value="100"/>
+                        <Setter Property="Width" Value="120"/>
+                        <Setter Property="Grid.Row" Value="{Binding Path=Point.Y}"/>
+                        <Setter Property="Grid.Column" Value="{Binding Path=Point.X}"/>
+                        <Setter Property="BorderThickness" Value="1.5"/>
+                        <Setter Property="Content" Value="{Binding Path=Unit}"/>
+                        <Setter Property="Background" >
+                            <Setter.Value>
+                                <ImageBrush ImageSource="{Binding Path=ImageSource}" />
+                            </Setter.Value>
+                        </Setter>
+                        <EventSetter
                         Event="PreviewMouseLeftButtonDown"
                         Handler="HexItem_PreviewMouseButtonDown" />
-                    <EventSetter 
+                        <EventSetter 
                         Event="PreviewMouseRightButtonDown"
                         Handler="HexItem_PreviewMouseButtonDown"
                         />
-                    <EventSetter 
+                        <EventSetter 
                         Event="MouseEnter"
                         Handler="HexItem_MouseEnter"/>
-                </Style>
-            </hx:HexList.ItemContainerStyle>
-        </hx:HexList>
+                    </Style>
+                </hx:HexList.ItemContainerStyle>
+            </hx:HexList>
+        </ScrollViewer>
+        <!-- Unit Details Windows-->
+        <Grid Name="UnitDetailsWindow" Grid.Row="1" Grid.Column="1">
+            <!-- Okienko jest dodawane/usuwane w kodzie -->
+        </Grid>
         <!-- Frame corners -->
         <Image Grid.Column="0" Grid.Row="0" Source="/PanzerGeneral2_0;component/Resources/frame_corner.png" />
         <Image Grid.Column="0" Grid.Row="3" Source="/PanzerGeneral2_0;component/Resources/frame_corner.png" RenderTransformOrigin="0.5,0.5" >
