@@ -63,6 +63,26 @@ namespace PanzerGeneral2_0.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
+        public static System.Drawing.Bitmap base_blue {
+            get {
+                object obj = ResourceManager.GetObject("base_blue", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        public static System.Drawing.Bitmap base_red {
+            get {
+                object obj = ResourceManager.GetObject("base_red", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
         public static System.Drawing.Bitmap board {
             get {
                 object obj = ResourceManager.GetObject("board", resourceCulture);
@@ -191,18 +211,19 @@ namespace PanzerGeneral2_0.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to 1 1 1 0 0 0 0 0 0 0 0 0 1 1 1
-        ///1 1 1 0 0 0 0 0 0 1 0 0 1 1 1
-        ///1 0 0 0 0 0 0 0 0 0 0 0 0 0 1
-        ///0 0 0 1 0 0 2 0 0 0 0 0 0 0 0
-        ///0 0 0 0 0 0 2 2 0 0 1 0 0 0 1
-        ///0 1 0 0 0 2 2 2 0 0 0 0 0 0 0
-        ///0 0 0 0 0 2 2 2 2 0 0 0 0 1 0
-        ///0 0 0 0 0 2 2 2 2 2 0 0 0 0 0
-        ///
-        ///0 -&gt; Plain
-        ///1 -&gt; Forest
-        ///2 -&gt; Mountains.
+        ///   Looks up a localized string similar to 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0
+        ///0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0
+        ///0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0
+        ///0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0
+        ///0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0
+        ///0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0
+        ///0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0
+        ///0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0
+        ///0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0
+        ///0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0
+        ///0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0
+        ///0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0
+        ///0 0 0 0 0 0 0 0 0 0  [rest of string was truncated]&quot;;.
         /// </summary>
         public static string terrain_distribution {
             get {
@@ -211,24 +232,19 @@ namespace PanzerGeneral2_0.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0
-        ///0 0 0 0 0 0 0 0 0 0 0 0 0 0 0
-        ///0 0 0 3 0 0 0 0 0 0 0 6 0 0 0
-        ///0 2 0 3 0 0 0 0 0 0 0 6 0 5 0
-        ///0 0 0 0 0 0 0 0 0 0 0 0 0 0 0
-        ///0 0 1 0 0 0 0 0 0 0 0 0 4 0 0
-        ///0 1 1 0 0 0 0 0 0 0 0 0 4 4 0
-        ///0 0 0 0 0 0 0 0 0 0 0 0 0 0 0
-        ///
-        ///0 -&gt; no unit
-        ///
-        ///1 -&gt; team A Infantry
-        ///2 -&gt; team A Cannon
-        ///3 -&gt; team A Tank
-        ///
-        ///4 -&gt; team B Infantry
-        ///5 -&gt; team B Cannon
-        ///6 -&gt; team B Tank.
+        ///   Looks up a localized string similar to 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0
+        ///0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0
+        ///0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0
+        ///0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0
+        ///0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0
+        ///0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0
+        ///0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0
+        ///0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0
+        ///0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0
+        ///0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0
+        ///0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0
+        ///0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0
+        ///0 0 0 0 0 0 0 0 0 0  [rest of string was truncated]&quot;;.
         /// </summary>
         public static string unit_distribution {
             get {

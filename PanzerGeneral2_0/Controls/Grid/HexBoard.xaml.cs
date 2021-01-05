@@ -26,7 +26,7 @@ namespace PanzerGeneral2_0.Controls.Grid
 
         private List<HexPoint> hexPoints = new List<HexPoint>();
  
-        private int lastUnitChecked;    // jeśli < 0 brak zaznaczonej jednostki, w p.p. indeks pola zaznaczonej jednostki
+        public int lastUnitChecked { get; set; }    // jeśli < 0 brak zaznaczonej jednostki, w p.p. indeks pola zaznaczonej jednostki
 
         public event EventHandler<HexItemEventArgs> HexItemMouseEnterEvent;
 
@@ -34,6 +34,9 @@ namespace PanzerGeneral2_0.Controls.Grid
         {
             this.lastUnitChecked = -1;
             InitializeComponent();
+
+            UnitDetailsWindow.Children.Add(new InfantryControl(Unit.TeamInfo.TEAM_A));
+            UnitDetailsWindow.Children.Clear();
 
             DistributeHexesOnBoard();
         }
@@ -124,13 +127,19 @@ namespace PanzerGeneral2_0.Controls.Grid
                             hexPoint.bindUnitToHex(UnitFactory.buildUnit("Tank", Unit.TeamInfo.TEAM_A));
                             break;
                         case 4:
-                            hexPoint.bindUnitToHex(UnitFactory.buildUnit("Infantry", Unit.TeamInfo.TEAM_B));
+                            hexPoint.bindUnitToHex(UnitFactory.buildUnit("Base", Unit.TeamInfo.TEAM_A));
                             break;
                         case 5:
-                            hexPoint.bindUnitToHex(UnitFactory.buildUnit("Cannon", Unit.TeamInfo.TEAM_B));
+                            hexPoint.bindUnitToHex(UnitFactory.buildUnit("Infantry", Unit.TeamInfo.TEAM_B));
                             break;
                         case 6:
+                            hexPoint.bindUnitToHex(UnitFactory.buildUnit("Cannon", Unit.TeamInfo.TEAM_B));
+                            break;
+                        case 7:
                             hexPoint.bindUnitToHex(UnitFactory.buildUnit("Tank", Unit.TeamInfo.TEAM_B));
+                            break;
+                        case 8:
+                            hexPoint.bindUnitToHex(UnitFactory.buildUnit("Base", Unit.TeamInfo.TEAM_B));
                             break;
                         default:
                             break;
@@ -265,6 +274,11 @@ namespace PanzerGeneral2_0.Controls.Grid
             {
                 hexPoints[i].Background.Opacity = CheckedHexPointInfo.NOT_CHECKED;
             }
+        }
+
+        public HexPoint getHexAt(int index)
+        {
+            return hexPoints[index];
         }
     }
 }

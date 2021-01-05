@@ -66,11 +66,19 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="Controls\Other\UnitDetailsControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Controls\Units\CannonControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Controls\Units\InfantryControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Controls\Units\MilitaryBaseControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -93,11 +101,17 @@
     </Compile>
     <Compile Include="Controls\Grid\HexPoint.cs" />
     <Compile Include="Controls\Grid\Helpers\IntPoint.cs" />
+    <Compile Include="Controls\Other\UnitDetailsControl.xaml.cs">
+      <DependentUpon>UnitDetailsControl.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Controls\Units\CannonControl.xaml.cs">
       <DependentUpon>CannonControl.xaml</DependentUpon>
     </Compile>
     <Compile Include="Controls\Units\InfantryControl.xaml.cs">
       <DependentUpon>InfantryControl.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\Units\MilitaryBaseControl.xaml.cs">
+      <DependentUpon>MilitaryBaseControl.xaml</DependentUpon>
     </Compile>
     <Compile Include="Controls\Units\TankContol.xaml.cs">
       <DependentUpon>TankContol.xaml</DependentUpon>
@@ -181,6 +195,12 @@
   </ItemGroup>
   <ItemGroup>
     <Resource Include="Resources\metal_plate_gold.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\base_blue.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\base_red.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

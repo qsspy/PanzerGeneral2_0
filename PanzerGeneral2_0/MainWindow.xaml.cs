@@ -1,4 +1,5 @@
-﻿using PanzerGeneral2_0.Controls.Units;
+﻿using PanzerGeneral2_0.Controls.Other;
+using PanzerGeneral2_0.Controls.Units;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -73,8 +74,11 @@ namespace PanzerGeneral2_0
                     case CannonControl cc:
                         unitKind = "Cannon";
                         break;
-                    case TankContol ic:
+                    case TankContol tc:
                         unitKind = "Tank";
+                        break;
+                    case MilitaryBaseControl mbc:
+                        unitKind = "Military Base";
                         break;
                     default:
                         unitKind = "Infantry";
@@ -89,6 +93,34 @@ namespace PanzerGeneral2_0
         {
             HexNameLabel.Content = "";
             UnitNameLabel.Content = "";
+        }
+
+        private void onUnitDetailsButtonClick(object sender, RoutedEventArgs e)
+        {
+            if(sender is Button)
+            {
+                int selectedHexIndex = GameplayFrame.lastUnitChecked;
+
+                if (selectedHexIndex >= 0 && GameplayFrame.getHexAt(selectedHexIndex).Unit != null)
+                {
+                    bool detailsWindowVisible = GameplayFrame.UnitDetailsWindow.Children.Count != 0;
+
+                    if(detailsWindowVisible)
+                    {
+                        DetailsButton.Content = "UNIT DETAILS";
+                        GameplayFrame.UnitDetailsWindow.Children.Clear();
+                        GameplayFrame.UnitDetailsWindow.Visibility = Visibility.Hidden;
+                    }
+                    else
+                    {
+                        DetailsButton.Content = "HIDE DETAILS";
+                        var unit = GameplayFrame.getHexAt(selectedHexIndex).Unit;
+                        GameplayFrame.UnitDetailsWindow.Children.Add(new UnitDetailsControl(unit));
+                        GameplayFrame.UnitDetailsWindow.Visibility = Visibility.Visible;
+
+                    }
+                }
+            }
         }
     }
 }

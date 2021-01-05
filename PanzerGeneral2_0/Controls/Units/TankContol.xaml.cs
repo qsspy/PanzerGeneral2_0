@@ -8,6 +8,7 @@
         public TankContol(TeamInfo team) : base(team)
         {
             DataContext = this;
+            TexturePath = "/PanzerGeneral2_0;component/Resources/tank.png";
             TeamCode = team;
             UnitKind = UnitInfo.INFANTRY;
             MaxAmmo = 10;

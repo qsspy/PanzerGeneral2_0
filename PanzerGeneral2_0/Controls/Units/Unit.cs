@@ -21,6 +21,7 @@ namespace PanzerGeneral2_0.Controls.Units
             TANK,
             INFANTRY,
             CANNON,
+            MILITARY_BASE,
             SOFT,
             MEDIUM,
             HARD
@@ -35,12 +36,13 @@ namespace PanzerGeneral2_0.Controls.Units
         //Do odwracania tekstury
         public int Scale { get; set; }
         public string HpLabelColor { get; set; }
+        public string TexturePath { get; set; }
 
 
         public TeamInfo TeamCode { get; set; }
         public UnitInfo UnitKind { get; set; }
-        public int? MaxAmmo { get; set; }
-        public int? CurrentAmmo { get; set; }
+        public int MaxAmmo { get; set; }
+        public int CurrentAmmo { get; set; }
         public int MaxFuel { get; set; }
         public int CurrentFuel { get; set; }
         public int SoftAttackValue { get; set; }
