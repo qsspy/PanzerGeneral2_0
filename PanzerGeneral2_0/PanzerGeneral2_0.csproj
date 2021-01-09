@@ -118,6 +118,7 @@
     </Compile>
     <Compile Include="Controls\Units\Unit.cs" />
     <Compile Include="CustomEventArgs\HexItemEventArgs.cs" />
+    <Compile Include="CustomEventArgs\UnitCombatEventArgs.cs" />
     <Compile Include="Factories\UnitFactory.cs" />
     <Compile Include="MainWindow.xaml.cs">
       <DependentUpon>MainWindow.xaml</DependentUpon>

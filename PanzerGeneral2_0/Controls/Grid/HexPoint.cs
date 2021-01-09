@@ -19,11 +19,12 @@ namespace PanzerGeneral2_0.Controls.Grid
         public int TerrainModifier { get; set; }
         public IntPoint Point { get; set; }
 
-        public HexPoint(IntPoint point, string imageSource) 
+        public HexPoint(IntPoint point, string imageSource, int terrainModifier) 
         {
             this.DataContext = this;
             this.Point = point;
             this.ImageSource = imageSource;
+            this.TerrainModifier = terrainModifier;
         }
 
 
