@@ -25,10 +25,12 @@ namespace PanzerGeneral2_0.Controls.Grid
     {
 
         private List<HexPoint> hexPoints = new List<HexPoint>();
- 
+
         public int lastUnitChecked { get; set; }    // jeśli < 0 brak zaznaczonej jednostki, w p.p. indeks pola zaznaczonej jednostki
 
         public event EventHandler<HexItemEventArgs> HexItemMouseEnterEvent;
+
+        public event EventHandler<UnitCombatEventArgs> UnitCombatEvent;
 
         public HexBoard()
         {
@@ -44,12 +46,12 @@ namespace PanzerGeneral2_0.Controls.Grid
         /**
          * Metoda obsługująca zdarzenie kliknięcia lewym przyciskiem myszy na hexpoint
          */
-        private void HexItem_PreviewMouseButtonDown(object sender, System.Windows.Input.MouseButtonEventArgs e)
+        private void HexItem_PreviewMouseButtonDown(object sender, MouseButtonEventArgs e)
         {
-            SetUnitAfterClickInteraction((HexPoint) sender, e.ChangedButton);
+            SetUnitAfterClickInteraction((HexPoint)sender, e.ChangedButton);
         }
 
-        private void HexItem_MouseEnter(object sender, System.Windows.Input.MouseEventArgs e)
+        private void HexItem_MouseEnter(object sender, MouseEventArgs e)
         {
             if (sender is HexPoint)
             {
@@ -93,6 +95,7 @@ namespace PanzerGeneral2_0.Controls.Grid
                 foreach (int j in Enumerable.Range(0, columnCount))
                 {
                     var bgPath = "";
+                    var terrainModifier = 0;
                     HexPointTerrainInfo terrain;
 
                     // TODO - Mozna zastąpić fabryką
@@ -101,18 +104,21 @@ namespace PanzerGeneral2_0.Controls.Grid
                         case 0:
                             bgPath = "/PanzerGeneral2_0;component/Resources/plain.png";
                             terrain = HexPointTerrainInfo.PLAIN;
+                            terrainModifier = 1;
                             break;
                         case 1:
                             bgPath = "/PanzerGeneral2_0;component/Resources/forest.png";
                             terrain = HexPointTerrainInfo.FOREST;
+                            terrainModifier = 2;
                             break;
                         default:
                             bgPath = "/PanzerGeneral2_0;component/Resources/mountains.png";
                             terrain = HexPointTerrainInfo.MOUNTAINS;
+                            terrainModifier = 3;
                             break;
                     }
 
-                    var hexPoint = new HexPoint(new IntPoint(j, i), bgPath);
+                    var hexPoint = new HexPoint(new IntPoint(j, i), bgPath, terrainModifier);
                     hexPoint.Terrain = terrain;
 
                     switch (Int32.Parse(unitLine[j]))
@@ -170,12 +176,13 @@ namespace PanzerGeneral2_0.Controls.Grid
                 // walka jednostek jeśli kliknięto zaznaczony hexpoint z wrogą jednostką prawym przyciskiem myszy
                 else if (checkedHexPoint.Background.Opacity == CheckedHexPointInfo.ATTACK_CHECKED && mouseButton == MouseButton.Right)
                 {
-                    CombatOfUnits(hexPoints[lastUnitChecked], hexPoints[index]);
+                    hexPoints[index] = CombatOfUnits(hexPoints[lastUnitChecked], hexPoints[index]);
+                    // TODO: data binding nie działa - nie zmienia się wyświetlanie życia na pasku jednostki
                 }
 
                 resetCheckedElements();
                 return;
-            }      
+            }
 
             resetCheckedElements();
 
@@ -183,18 +190,18 @@ namespace PanzerGeneral2_0.Controls.Grid
             if (checkedHexPoint.Unit != null)
             {
                 lastUnitChecked = index;
-                IEnumerable<IntPoint> area = GetHexPointsByRangeAndType(checkedHexPoint, mouseButton == MouseButton.Left ? checkedHexPoint.Unit.MoveRange : checkedHexPoint.Unit.AttackRange);             
+                IEnumerable<HexPoint> area = GetIntPointsByRangeAndType(checkedHexPoint, mouseButton == MouseButton.Left ? checkedHexPoint.Unit.MoveRange : checkedHexPoint.Unit.AttackRange);
 
                 foreach (int i in Enumerable.Range(0, hexPoints.Count))
                 {
                     // ruch - hexpoint musi znajdować się w zasięgu i nie może zawierać innej sojuszniczej jednostki
-                    if (area.Contains(hexPoints[i].Point) && hexPoints[i].Unit == null && mouseButton == MouseButton.Left)
+                    if (area.Contains(hexPoints[i]) && hexPoints[i].Unit == null && mouseButton == MouseButton.Left)
                     {
                         hexPoints[i].Background.Opacity = CheckedHexPointInfo.TERRAIN_CHECKED;
                     }
 
                     // atak - hexpoint musi znajdować się w zasięgu i musi zawierać wrogą jednostkę
-                    else if (area.Contains(hexPoints[i].Point) && hexPoints[i].Unit != null && hexPoints[i].Unit.TeamCode != checkedHexPoint.Unit.TeamCode && mouseButton == MouseButton.Right)
+                    else if (area.Contains(hexPoints[i]) && hexPoints[i].Unit != null && hexPoints[i].Unit.TeamCode != checkedHexPoint.Unit.TeamCode && mouseButton == MouseButton.Right)
                     {
                         hexPoints[i].Background.Opacity = CheckedHexPointInfo.ATTACK_CHECKED;
                     }
@@ -205,61 +212,56 @@ namespace PanzerGeneral2_0.Controls.Grid
         /**
          * Metoda realizująca walkę między dwoma jednostkami
          */
-        private void CombatOfUnits(HexPoint attacker, HexPoint victim)
+        private HexPoint CombatOfUnits(HexPoint attacker, HexPoint defender)
         {
-            throw new NotImplementedException();
+            var attackIndicator = 0;
+            var defenseIndicator = 0;
+
+            switch (attacker.Unit.Toughness)
+            {
+                case Unit.UnitInfo.SOFT:
+                    attackIndicator = attacker.Unit.SoftAttackValue;
+                    defenseIndicator = defender.Unit.SoftDefenceValue;
+                    break;
+
+                case Unit.UnitInfo.MEDIUM:
+                    attackIndicator = attacker.Unit.MediumAttackValue;
+                    defenseIndicator = defender.Unit.MediumDefenceValue;
+                    break;
+
+                case Unit.UnitInfo.HARD:
+                    attackIndicator = attacker.Unit.HardAttackValue;
+                    defenseIndicator = defender.Unit.HardDefenceValue;
+                    break;
+
+                default:
+                    throw new Exception("Brak przypisanej wytrzymałości dla jednostki atakującej!");
+            }
+
+            // jeśli współczynnik obrony jest większy niż współczynnik ataku - ustaw punkty obrażeń na 0
+            var damagePoints = attackIndicator - defenseIndicator < 0 ? 0 : attackIndicator - defenseIndicator;
+            defender.Unit.Hp = defender.Unit.Hp - damagePoints;
+
+            UnitCombatEvent?.Invoke(this, new UnitCombatEventArgs(attacker.Unit, defender.Unit, damagePoints));
+
+            return defender;
         }
 
         /**
-         * Metoda zwracająca listę hexpointów dla przekazanego hexpointa i typu interakcji
+         * Metoda zwracająca listę hexpointów zależną od zasięgu ruchu jednostki oraz terenu na jakim znajdować się będzie jednostka
          */
-        private IEnumerable<IntPoint> GetHexPointsByRangeAndType(HexPoint checkedHexPoint, int range)
+        private IEnumerable<HexPoint> GetIntPointsByRangeAndType(HexPoint checkedIntPoint, int moveReamaining)
         {
-            /* WARIANT 1 */
-            ////funkcja sprawdzająca istnienie hexpointa w zakresie zaznaczonej jednostki
-            //Func<IntPoint, bool> selector = delegate (IntPoint hexIntPoint)
-            //{
-            //    int unitMoveRange = checkedHexPoint.Unit.MoveRange;
-            //    int unitX = checkedHexPoint.Point.X;
-            //    int unitY = checkedHexPoint.Point.Y;
+            // ustalenie listy sąsiadujących hexpointów
+            HashSet<HexPoint> area = hexPoints.Where(element => (new HexArrayHelper().GetNeighbours(new IntSize(Board.RowCount, Board.ColumnCount),checkedIntPoint.Point)).Contains(element.Point)).ToHashSet();
 
-            //    //int x = Math.Abs(unitX - hexIntPoint.X);
-            //    //int y = Math.Abs(unitY - hexIntPoint.Y);
-            //    //int radius = (int)(Math.Sqrt(Math.Pow(x, 2) + Math.Pow(y, 2)));
-
-            //    int radius = (int)(Math.Sqrt(Math.Pow(hexIntPoint.X - unitX, 2) + Math.Pow(hexIntPoint.Y - unitY, 2)));
-
-            //    if (radius <= unitMoveRange)
-            //    {
-            //        return true;
-            //    }
-            //    return false;
-            //};
-            ////przygotowanie listy hexpointów, które należą do zakresu ruchu jednostki
-            //IEnumerable<IntPoint> area = new HexArrayHelper().GetArea(
-            //    new IntSize(Board.RowCount, Board.ColumnCount),
-            //    checkedHexPoint.Point,
-            //    selector);
-
-
-            /* WARIANT 2 */
-            // TODO: zoptymalizować
-            HexArrayHelper arrayHelper = new HexArrayHelper();
-            IEnumerable<IntPoint> area = arrayHelper.GetNeighbours(
-                            new IntSize(Board.RowCount, Board.ColumnCount),
-                            checkedHexPoint.Point);
-            IEnumerable<IntPoint> tempArea = new List<IntPoint>();
-
-            foreach (int i in Enumerable.Range(0, range - 1))
+            foreach (HexPoint hexPoint in area)
             {
-                foreach (IntPoint intPoint in area)
+                var terrainModifier = hexPoint.TerrainModifier;
+                if (moveReamaining - terrainModifier > 0)
                 {
-                    tempArea = tempArea.Concat(arrayHelper.GetNeighbours(
-                        new IntSize(Board.RowCount, Board.ColumnCount),
-                        intPoint));
+                    area = area.Concat(GetIntPointsByRangeAndType(hexPoint, moveReamaining - terrainModifier)).ToHashSet();
                 }
-                area = area.Concat(tempArea);
-                area.Distinct().ToDictionary(point => new IntPoint(point.X, point.Y));
             }
 
             return area;
