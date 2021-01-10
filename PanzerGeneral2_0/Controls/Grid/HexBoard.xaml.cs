@@ -24,9 +24,9 @@ namespace PanzerGeneral2_0.Controls.Grid
     public partial class HexBoard : UserControl
     {
 
-        private List<HexPoint> hexPoints = new List<HexPoint>();
+        private readonly List<HexPoint> hexPoints = new List<HexPoint>();
 
-        public int lastUnitChecked { get; set; }    // jeśli < 0 brak zaznaczonej jednostki, w p.p. indeks pola zaznaczonej jednostki
+        public int lastUnitChecked;   // jeśli < 0 brak zaznaczonej jednostki, w p.p. indeks pola zaznaczonej jednostki
 
         public event EventHandler<HexItemEventArgs> HexItemMouseEnterEvent;
 
@@ -34,8 +34,9 @@ namespace PanzerGeneral2_0.Controls.Grid
 
         public HexBoard()
         {
-            this.lastUnitChecked = -1;
             InitializeComponent();
+           
+            this.lastUnitChecked = -1;
 
             UnitDetailsWindow.Children.Add(new InfantryControl(Unit.TeamInfo.TEAM_A));
             UnitDetailsWindow.Children.Clear();
@@ -53,9 +54,9 @@ namespace PanzerGeneral2_0.Controls.Grid
 
         private void HexItem_MouseEnter(object sender, MouseEventArgs e)
         {
-            if (sender is HexPoint)
+            if (sender is HexPoint point)
             {
-                var index = Board.ItemContainerGenerator.IndexFromContainer((HexPoint)sender);
+                var index = Board.ItemContainerGenerator.IndexFromContainer(point);
                 int x = index / Board.ColumnCount;
                 int y = index % Board.ColumnCount;
                 HexPointTerrainInfo terrainInfo = hexPoints[index].Terrain;
@@ -94,58 +95,47 @@ namespace PanzerGeneral2_0.Controls.Grid
                 //dla kazdej cyfry z pliku
                 foreach (int j in Enumerable.Range(0, columnCount))
                 {
-                    var bgPath = "";
-                    var terrainModifier = 0;
-                    HexPointTerrainInfo terrain;
+                    HexPoint hexPoint;
+                    IntPoint intPoint = new IntPoint(j, i);
 
-                    // TODO - Mozna zastąpić fabryką
                     switch (Int32.Parse(terrainLine[j]))
                     {
                         case 0:
-                            bgPath = "/PanzerGeneral2_0;component/Resources/plain.png";
-                            terrain = HexPointTerrainInfo.PLAIN;
-                            terrainModifier = 1;
+                            hexPoint = HexPointFactory.BuildHexPoint("Plain", intPoint);
                             break;
                         case 1:
-                            bgPath = "/PanzerGeneral2_0;component/Resources/forest.png";
-                            terrain = HexPointTerrainInfo.FOREST;
-                            terrainModifier = 2;
+                            hexPoint = HexPointFactory.BuildHexPoint("Forest", intPoint);
                             break;
                         default:
-                            bgPath = "/PanzerGeneral2_0;component/Resources/mountains.png";
-                            terrain = HexPointTerrainInfo.MOUNTAINS;
-                            terrainModifier = 3;
+                            hexPoint = HexPointFactory.BuildHexPoint("Mountains", intPoint);
                             break;
                     }
-
-                    var hexPoint = new HexPoint(new IntPoint(j, i), bgPath, terrainModifier);
-                    hexPoint.Terrain = terrain;
 
                     switch (Int32.Parse(unitLine[j]))
                     {
                         case 1:
-                            hexPoint.bindUnitToHex(UnitFactory.buildUnit("Infantry", Unit.TeamInfo.TEAM_A));
+                            hexPoint.BindUnitToHex(UnitFactory.BuildUnit("Infantry", Unit.TeamInfo.TEAM_A));
                             break;
                         case 2:
-                            hexPoint.bindUnitToHex(UnitFactory.buildUnit("Cannon", Unit.TeamInfo.TEAM_A));
+                            hexPoint.BindUnitToHex(UnitFactory.BuildUnit("Cannon", Unit.TeamInfo.TEAM_A));
                             break;
                         case 3:
-                            hexPoint.bindUnitToHex(UnitFactory.buildUnit("Tank", Unit.TeamInfo.TEAM_A));
+                            hexPoint.BindUnitToHex(UnitFactory.BuildUnit("Tank", Unit.TeamInfo.TEAM_A));
                             break;
                         case 4:
-                            hexPoint.bindUnitToHex(UnitFactory.buildUnit("Base", Unit.TeamInfo.TEAM_A));
+                            hexPoint.BindUnitToHex(UnitFactory.BuildUnit("Base", Unit.TeamInfo.TEAM_A));
                             break;
                         case 5:
-                            hexPoint.bindUnitToHex(UnitFactory.buildUnit("Infantry", Unit.TeamInfo.TEAM_B));
+                            hexPoint.BindUnitToHex(UnitFactory.BuildUnit("Infantry", Unit.TeamInfo.TEAM_B));
                             break;
                         case 6:
-                            hexPoint.bindUnitToHex(UnitFactory.buildUnit("Cannon", Unit.TeamInfo.TEAM_B));
+                            hexPoint.BindUnitToHex(UnitFactory.BuildUnit("Cannon", Unit.TeamInfo.TEAM_B));
                             break;
                         case 7:
-                            hexPoint.bindUnitToHex(UnitFactory.buildUnit("Tank", Unit.TeamInfo.TEAM_B));
+                            hexPoint.BindUnitToHex(UnitFactory.BuildUnit("Tank", Unit.TeamInfo.TEAM_B));
                             break;
                         case 8:
-                            hexPoint.bindUnitToHex(UnitFactory.buildUnit("Base", Unit.TeamInfo.TEAM_B));
+                            hexPoint.BindUnitToHex(UnitFactory.BuildUnit("Base", Unit.TeamInfo.TEAM_B));
                             break;
                         default:
                             break;
@@ -170,24 +160,27 @@ namespace PanzerGeneral2_0.Controls.Grid
                 // przeniesienie jednostki jeśli kliknięto zaznaczony hexpoint terenu lewym przyciskiem myszy
                 if (checkedHexPoint.Background.Opacity == CheckedHexPointInfo.TERRAIN_CHECKED && mouseButton == MouseButton.Left)
                 {
-                    hexPoints[index].bindUnitToHex(hexPoints[lastUnitChecked].unbindUnitFromHex());
+                    hexPoints[index].BindUnitToHex(hexPoints[lastUnitChecked].UnbindUnitFromHex());
                 }
 
                 // walka jednostek jeśli kliknięto zaznaczony hexpoint z wrogą jednostką prawym przyciskiem myszy
                 else if (checkedHexPoint.Background.Opacity == CheckedHexPointInfo.ATTACK_CHECKED && mouseButton == MouseButton.Right)
                 {
-                    hexPoints[index] = CombatOfUnits(hexPoints[lastUnitChecked], hexPoints[index]);
-                    // TODO: data binding nie działa - nie zmienia się wyświetlanie życia na pasku jednostki
+                    // atak
+                    hexPoints[index] = CombatOfUnits(hexPoints[lastUnitChecked], hexPoints[index], false);    // TODO: data binding nie działa - nie zmienia się wyświetlanie życia na pasku jednostki
+
+                    // kontratak
+                    hexPoints[lastUnitChecked] = CombatOfUnits(hexPoints[index], hexPoints[lastUnitChecked], true);
                 }
 
-                resetCheckedElements();
+                ResetCheckedElements();
                 return;
             }
 
-            resetCheckedElements();
+            ResetCheckedElements();
 
             // zaznaczenie możliwych ruchów lub ataków
-            if (checkedHexPoint.Unit != null)
+            if (checkedHexPoint.Unit != null && checkedHexPoint.Unit.UnitKind != Unit.UnitInfo.MILITARY_BASE)
             {
                 lastUnitChecked = index;
                 IEnumerable<HexPoint> area = GetIntPointsByRangeAndType(checkedHexPoint, mouseButton == MouseButton.Left ? checkedHexPoint.Unit.MoveRange : checkedHexPoint.Unit.AttackRange);
@@ -210,39 +203,40 @@ namespace PanzerGeneral2_0.Controls.Grid
         }
 
         /**
-         * Metoda realizująca walkę między dwoma jednostkami
+         * Metoda realizująca walkę między dwoma jednostkami.
+         * Jeśli nie jest to kontratak, to atak zyskuje losowo bonus 0% - 20% swojej wartości.
          */
-        private HexPoint CombatOfUnits(HexPoint attacker, HexPoint defender)
+        private HexPoint CombatOfUnits(HexPoint attacker, HexPoint defender, bool isCounterattack)
         {
-            var attackIndicator = 0;
-            var defenseIndicator = 0;
+            int attackIndicator;
 
-            switch (attacker.Unit.Toughness)
+            switch (defender.Unit.Toughness)
             {
                 case Unit.UnitInfo.SOFT:
                     attackIndicator = attacker.Unit.SoftAttackValue;
-                    defenseIndicator = defender.Unit.SoftDefenceValue;
                     break;
 
                 case Unit.UnitInfo.MEDIUM:
                     attackIndicator = attacker.Unit.MediumAttackValue;
-                    defenseIndicator = defender.Unit.MediumDefenceValue;
                     break;
 
                 case Unit.UnitInfo.HARD:
                     attackIndicator = attacker.Unit.HardAttackValue;
-                    defenseIndicator = defender.Unit.HardDefenceValue;
                     break;
 
                 default:
                     throw new Exception("Brak przypisanej wytrzymałości dla jednostki atakującej!");
             }
 
+            // ustalenie współczynników ataku i obrony jednostek
+            attackIndicator += (int) (new Random().Next(0, 20) * 0.01 * attackIndicator); 
+            int defenseIndicator = defender.Unit.DefenceValue;
+
             // jeśli współczynnik obrony jest większy niż współczynnik ataku - ustaw punkty obrażeń na 0
-            var damagePoints = attackIndicator - defenseIndicator < 0 ? 0 : attackIndicator - defenseIndicator;
+            int damagePoints = attackIndicator - defenseIndicator < 0 ? 0 : attackIndicator - defenseIndicator;
             defender.Unit.Hp = defender.Unit.Hp - damagePoints;
 
-            UnitCombatEvent?.Invoke(this, new UnitCombatEventArgs(attacker.Unit, defender.Unit, damagePoints));
+            UnitCombatEvent?.Invoke(this, new UnitCombatEventArgs(attacker.Unit, defender.Unit, damagePoints, isCounterattack));
 
             return defender;
         }
@@ -257,7 +251,7 @@ namespace PanzerGeneral2_0.Controls.Grid
 
             foreach (HexPoint hexPoint in area)
             {
-                var terrainModifier = hexPoint.TerrainModifier;
+                int terrainModifier = hexPoint.TerrainModifier;
                 if (moveReamaining - terrainModifier > 0)
                 {
                     area = area.Concat(GetIntPointsByRangeAndType(hexPoint, moveReamaining - terrainModifier)).ToHashSet();
@@ -270,7 +264,7 @@ namespace PanzerGeneral2_0.Controls.Grid
         /**
          * Metoda resetująca zaznaczony zakres ruchu jednostki
          */
-        private void resetCheckedElements()
+        private void ResetCheckedElements()
         {
             foreach (int i in Enumerable.Range(0, Board.Items.Count))
             {
@@ -278,7 +272,7 @@ namespace PanzerGeneral2_0.Controls.Grid
             }
         }
 
-        public HexPoint getHexAt(int index)
+        public HexPoint GetHexAt(int index)
         {
             return hexPoints[index];
         }

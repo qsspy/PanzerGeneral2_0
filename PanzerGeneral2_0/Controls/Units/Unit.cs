@@ -48,9 +48,7 @@ namespace PanzerGeneral2_0.Controls.Units
         public int SoftAttackValue { get; set; }
         public int MediumAttackValue { get; set; }
         public int HardAttackValue { get; set; }
-        public int SoftDefenceValue { get; set; }
-        public int MediumDefenceValue { get; set; }
-        public int HardDefenceValue { get; set; }
+        public int DefenceValue { get; set; }
         public UnitInfo Toughness { get; set; }
         public int MoveRange { get; set; }
         public int AttackRange { get; set; }

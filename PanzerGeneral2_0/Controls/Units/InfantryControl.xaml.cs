@@ -15,12 +15,10 @@
             CurrentAmmo = 10;
             MaxFuel = 50;
             CurrentFuel = 50;
-            SoftAttackValue = 5;
-            MediumAttackValue = 3;
-            HardAttackValue = 1;
-            SoftDefenceValue = 5;
-            MediumDefenceValue = 3;
-            HardDefenceValue = 1;
+            SoftAttackValue = 7;
+            MediumAttackValue = 5;
+            HardAttackValue = 2;
+            DefenceValue = 2;
             Toughness = UnitInfo.SOFT;
             MoveRange = 4;
             AttackRange = 1;

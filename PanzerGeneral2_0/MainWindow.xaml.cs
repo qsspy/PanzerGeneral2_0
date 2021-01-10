@@ -114,7 +114,7 @@ namespace PanzerGeneral2_0
             {
                 int selectedHexIndex = GameplayFrame.lastUnitChecked;
 
-                if (selectedHexIndex >= 0 && GameplayFrame.getHexAt(selectedHexIndex).Unit != null)
+                if (selectedHexIndex >= 0 && GameplayFrame.GetHexAt(selectedHexIndex).Unit != null)
                 {
 
                     if(_activeDialog == DialogType.UNIT_INFO_DIALOG)

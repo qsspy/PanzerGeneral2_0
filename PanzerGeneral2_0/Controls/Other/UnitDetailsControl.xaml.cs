@@ -1,22 +1,10 @@
 ﻿using PanzerGeneral2_0.Controls.Units;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
 using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
 
 namespace PanzerGeneral2_0.Controls.Other
 {
-    
+
     public partial class UnitDetailsControl : UserControl
     {
         public string TeamCode { get; set; }
@@ -29,9 +17,7 @@ namespace PanzerGeneral2_0.Controls.Other
         public int SoftAttackValue { get; set; }
         public int MediumAttackValue { get; set; }
         public int HardAttackValue { get; set; }
-        public int SoftDefenceValue { get; set; }
-        public int MediumDefenceValue { get; set; }
-        public int HardDefenceValue { get; set; }
+        public int DefenceValue { get; set; }
         public string Toughness { get; set; }
         public int MoveRange { get; set; }
         public int AttackRange { get; set; }
@@ -87,9 +73,7 @@ namespace PanzerGeneral2_0.Controls.Other
             SoftAttackValue = unit.SoftAttackValue;
             MediumAttackValue = unit.MediumAttackValue;
             HardAttackValue = unit.HardAttackValue;
-            SoftDefenceValue = unit.SoftDefenceValue;
-            MediumDefenceValue = unit.MediumDefenceValue;
-            HardDefenceValue = unit.HardDefenceValue;
+            DefenceValue = unit.DefenceValue;
             MoveRange = unit.MoveRange;
             AttackRange = unit.AttackRange;
             Hp = unit.Hp;
