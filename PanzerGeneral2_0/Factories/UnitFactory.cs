@@ -6,7 +6,7 @@ namespace PanzerGeneral2_0.Factories
     public static class UnitFactory
     {
 
-        public static Unit buildUnit(string type, Unit.TeamInfo team)
+        public static Unit BuildUnit(string type, Unit.TeamInfo team)
         {
             if(type == "Infantry")
             {

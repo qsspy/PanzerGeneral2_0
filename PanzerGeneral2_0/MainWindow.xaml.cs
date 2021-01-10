@@ -101,7 +101,7 @@ namespace PanzerGeneral2_0
             {
                 int selectedHexIndex = GameplayFrame.lastUnitChecked;
 
-                if (selectedHexIndex >= 0 && GameplayFrame.getHexAt(selectedHexIndex).Unit != null)
+                if (selectedHexIndex >= 0 && GameplayFrame.GetHexAt(selectedHexIndex).Unit != null)
                 {
                     bool detailsWindowVisible = GameplayFrame.UnitDetailsWindow.Children.Count != 0;
 
@@ -114,7 +114,7 @@ namespace PanzerGeneral2_0
                     else
                     {
                         DetailsButton.Content = "HIDE DETAILS";
-                        var unit = GameplayFrame.getHexAt(selectedHexIndex).Unit;
+                        var unit = GameplayFrame.GetHexAt(selectedHexIndex).Unit;
                         GameplayFrame.UnitDetailsWindow.Children.Add(new UnitDetailsControl(unit));
                         GameplayFrame.UnitDetailsWindow.Visibility = Visibility.Visible;
 

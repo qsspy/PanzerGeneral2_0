@@ -19,19 +19,19 @@ namespace PanzerGeneral2_0.Controls.Grid
         public int TerrainModifier { get; set; }
         public IntPoint Point { get; set; }
 
-        public HexPoint(IntPoint point, string imageSource, int terrainModifier) 
+        public HexPoint(IntPoint point, string imageSource, HexPointTerrainInfo terrain, int terrainModifier) 
         {
             this.DataContext = this;
             this.Point = point;
             this.ImageSource = imageSource;
+            this.Terrain = terrain;
             this.TerrainModifier = terrainModifier;
         }
-
 
         /**
          Przydziela podaną jednostkę do HexItem'a
          */
-        public void bindUnitToHex(Unit unit)
+        public void BindUnitToHex(Unit unit)
         {
             this.Unit = unit;
             this.Content = unit;
@@ -42,7 +42,7 @@ namespace PanzerGeneral2_0.Controls.Grid
         /**
          Odbiera jednostkę HexItem'owi
          */
-        public Unit unbindUnitFromHex()
+        public Unit UnbindUnitFromHex()
         {
             Unit tempUnit = this.Unit;
             this.Unit = null;
