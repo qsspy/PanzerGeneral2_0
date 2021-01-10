@@ -5,6 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:unit ="clr-namespace:PanzerGeneral2_0.Controls.Units" 
         xmlns:hex="clr-namespace:PanzerGeneral2_0.Controls.Grid"
+        xmlns:btn="clr-namespace:PanzerGeneral2_0.Controls.CustomButtons"
         mc:Ignorable="d"
         Title="MainWindow" 
         WindowState="Maximized" MinWidth="800" MinHeight="600">
@@ -106,13 +107,16 @@
                 <ImageBrush ImageSource="Resources/metal_plate_gold.png"  />
             </Grid.Background>
             <!-- Buttons -->
-            <Button Grid.Column="1" Grid.Row="1" Content="RESET"/>
-            <Button Grid.Column="1" Grid.Row="3" Content="SAVE"/>
-            <Button Grid.Column="1" Grid.Row="5" Content="LOAD"/>
-            <Button Name ="DetailsButton"
-                    Grid.Column="1" Grid.Row="7" Content="UNIT DETAILS" FontSize="8"
-                    Click="onUnitDetailsButtonClick"/>
-            <Button Grid.Column="1" Grid.Row="9" Content="QUIT"/>
+            <Button Name="ResetButton" Click="onResetButtonClick"
+                    Grid.Column="1" Grid.Row="1" Content="RESET"/>
+            <btn:SaveButton x:Name="SaveButton" Click="onSaveButtonClick"
+                    Grid.Column="1" Grid.Row="3" Content="SAVE"/>
+            <btn:LoadButton x:Name="LoadButton" Click="onLoadButtonClick"
+                    Grid.Column="1" Grid.Row="5" Content="LOAD"/>
+            <Button Name ="DetailsButton" Click="onUnitDetailsButtonClick"
+                    Grid.Column="1" Grid.Row="7" Content="UNIT DETAILS" FontSize="8"/>
+            <Button Name="QuitButton" Click="onQuitButtonClick"
+                    Grid.Column="1" Grid.Row="9" Content="QUIT"/>
         </Grid>
     </Grid>
 </Window>
