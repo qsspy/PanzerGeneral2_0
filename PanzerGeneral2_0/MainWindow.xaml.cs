@@ -127,7 +127,7 @@ namespace PanzerGeneral2_0
                     {
                         
                          DetailsButton.Content = "HIDE DETAILS";
-                         var unit = GameplayFrame.getHexAt(selectedHexIndex).Unit;
+                         var unit = GameplayFrame.GetHexAt(selectedHexIndex).Unit;
                          GameplayFrame.UnitDetailsWindow.Children.Add(new UnitDetailsControl(unit));
                         _activeDialog = DialogType.UNIT_INFO_DIALOG;
                         

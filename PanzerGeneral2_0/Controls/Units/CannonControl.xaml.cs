@@ -15,13 +15,13 @@
             CurrentAmmo = 10;
             MaxFuel = 50;
             CurrentFuel = 50;
-            SoftAttackValue = 2;
-            MediumAttackValue = 4;
-            HardAttackValue = 8;
+            SoftAttackValue = 3;
+            MediumAttackValue = 7;
+            HardAttackValue = 5;
             DefenceValue = 3;
             Toughness = UnitInfo.MEDIUM;
             MoveRange = 2;
-            AttackRange = 1;
+            AttackRange = 3;
             Hp = 50;
 
             InitializeComponent();
