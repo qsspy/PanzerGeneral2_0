@@ -20,7 +20,7 @@
         </Grid.RowDefinitions>
         <Border Background="{Binding Path=HpLabelColor, Mode=TwoWay}" Grid.Row="1" Grid.Column="1">
             <Viewbox  Stretch="Uniform">
-                <TextBox Text="{Binding Path=Hp, Mode=TwoWay}" Background="Transparent" x:Name="HpField" BorderThickness="0" IsReadOnly="True"/>
+                <TextBox Text="{Binding Path=Hp, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Background="Transparent" x:Name="HpField" BorderThickness="0" IsReadOnly="True"/>
             </Viewbox>
         </Border>
         <Grid.Background>

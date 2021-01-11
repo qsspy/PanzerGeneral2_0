@@ -167,7 +167,7 @@ namespace PanzerGeneral2_0.Controls.Grid
                 else if (checkedHexPoint.Background.Opacity == CheckedHexPointInfo.ATTACK_CHECKED && mouseButton == MouseButton.Right)
                 {
                     // atak
-                    hexPoints[index] = CombatOfUnits(hexPoints[lastUnitChecked], hexPoints[index], false);    // TODO: data binding nie działa - nie zmienia się wyświetlanie życia na pasku jednostki
+                    hexPoints[index] = CombatOfUnits(hexPoints[lastUnitChecked], hexPoints[index], false);
 
                     // kontratak
                     hexPoints[lastUnitChecked] = CombatOfUnits(hexPoints[index], hexPoints[lastUnitChecked], true);
@@ -183,7 +183,7 @@ namespace PanzerGeneral2_0.Controls.Grid
             if (checkedHexPoint.Unit != null && checkedHexPoint.Unit.UnitKind != Unit.UnitInfo.MILITARY_BASE)
             {
                 lastUnitChecked = index;
-                IEnumerable<HexPoint> area = GetIntPointsByRangeAndType(checkedHexPoint, mouseButton == MouseButton.Left ? checkedHexPoint.Unit.MoveRange : checkedHexPoint.Unit.AttackRange);
+                IEnumerable<HexPoint> area = GetMovementRange(checkedHexPoint, mouseButton == MouseButton.Left ? checkedHexPoint.Unit.MoveRange : checkedHexPoint.Unit.AttackRange);
 
                 foreach (int i in Enumerable.Range(0, hexPoints.Count))
                 {
@@ -208,8 +208,17 @@ namespace PanzerGeneral2_0.Controls.Grid
          */
         private HexPoint CombatOfUnits(HexPoint attacker, HexPoint defender, bool isCounterattack)
         {
-            int attackIndicator;
+            // wykluczenie sytuacji w której zniszczona jednostka kontratakuje
+            if (attacker.Unit == null)
+            { 
+                return defender; 
+            }
 
+            Random random = new Random();
+            int attackIndicator, defenseIndicator, damagePoints = 0, counterattackIndicator = isCounterattack == true ? -1 : 1;
+
+            // ustalenie współczynników ataku i obrony jednostek
+            defenseIndicator = defender.Unit.DefenceValue;
             switch (defender.Unit.Toughness)
             {
                 case Unit.UnitInfo.SOFT:
@@ -228,15 +237,25 @@ namespace PanzerGeneral2_0.Controls.Grid
                     throw new Exception("Brak przypisanej wytrzymałości dla jednostki atakującej!");
             }
 
-            // ustalenie współczynników ataku i obrony jednostek
-            attackIndicator += (int) (new Random().Next(0, 20) * 0.01 * attackIndicator); 
-            int defenseIndicator = defender.Unit.DefenceValue;
+            foreach (int i in Enumerable.Range(0, attacker.Unit.Hp))
+            {
+                int attackValue = random.Next(1, 21) + attackIndicator - defenseIndicator + counterattackIndicator;
+                
+                // jeśli wartość ataku przekroczyła 15 - zniszcz jedną jednostkę
+                if (attackValue > 15)
+                {
+                    damagePoints++;
+                }
+            }
 
-            // jeśli współczynnik obrony jest większy niż współczynnik ataku - ustaw punkty obrażeń na 0
-            int damagePoints = attackIndicator - defenseIndicator < 0 ? 0 : attackIndicator - defenseIndicator;
             defender.Unit.Hp = defender.Unit.Hp - damagePoints;
-
             UnitCombatEvent?.Invoke(this, new UnitCombatEventArgs(attacker.Unit, defender.Unit, damagePoints, isCounterattack));
+
+            // usuń jednostkę z planszy, jeśli straciła całe życie
+            if (defender.Unit.Hp <= 0)
+            {
+                defender.UnbindUnitFromHex();
+            }
 
             return defender;
         }
@@ -244,7 +263,7 @@ namespace PanzerGeneral2_0.Controls.Grid
         /**
          * Metoda zwracająca listę hexpointów zależną od zasięgu ruchu jednostki oraz terenu na jakim znajdować się będzie jednostka
          */
-        private IEnumerable<HexPoint> GetIntPointsByRangeAndType(HexPoint checkedIntPoint, int moveReamaining)
+        private IEnumerable<HexPoint> GetMovementRange(HexPoint checkedIntPoint, int moveReamaining)
         {
             // ustalenie listy sąsiadujących hexpointów
             HashSet<HexPoint> area = hexPoints.Where(element => (new HexArrayHelper().GetNeighbours(new IntSize(Board.RowCount, Board.ColumnCount),checkedIntPoint.Point)).Contains(element.Point)).ToHashSet();
@@ -254,7 +273,7 @@ namespace PanzerGeneral2_0.Controls.Grid
                 int terrainModifier = hexPoint.TerrainModifier;
                 if (moveReamaining - terrainModifier > 0)
                 {
-                    area = area.Concat(GetIntPointsByRangeAndType(hexPoint, moveReamaining - terrainModifier)).ToHashSet();
+                    area = area.Concat(GetMovementRange(hexPoint, moveReamaining - terrainModifier)).ToHashSet();
                 }
             }
 

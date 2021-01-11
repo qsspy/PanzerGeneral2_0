@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -7,7 +8,7 @@ using System.Windows.Controls;
 
 namespace PanzerGeneral2_0.Controls.Units
 {
-    public abstract class Unit : UserControl
+    public abstract class Unit : UserControl, INotifyPropertyChanged
     {
 
         public static int DEFAULT_UNIT_HEIGHT = 80;
@@ -15,6 +16,8 @@ namespace PanzerGeneral2_0.Controls.Units
 
         public static string TEAM_A_COLOR_CODE = "#FF586ACA";
         public static string TEAM_B_COLOR_CODE = "#FFD45B5B";
+
+        public event PropertyChangedEventHandler PropertyChanged;
 
         public enum UnitInfo
         {
@@ -52,8 +55,24 @@ namespace PanzerGeneral2_0.Controls.Units
         public UnitInfo Toughness { get; set; }
         public int MoveRange { get; set; }
         public int AttackRange { get; set; }
-        public int Hp { get; set; }
+        int _hp;
+        public int Hp
+        {
+            get { return _hp; }
+            set
+            {
+                _hp = value;
+                NotifyPropertyChanged("Hp");
+            }
+        }
 
+        public void NotifyPropertyChanged(string propertyName)
+        {
+            if (PropertyChanged != null)
+            {
+                PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
+            }
+        }
 
         public Unit(TeamInfo team) 
         {
