@@ -20,7 +20,7 @@
             }
 
             TeamCode = teamCode;
-            UnitKind = UnitInfo.MILITARY_BASE;
+            UnitKind = UnitInfo.BASE;
             MaxAmmo = 0;
             CurrentAmmo = 0;
             MaxFuel = 0;

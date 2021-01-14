@@ -24,7 +24,7 @@ namespace PanzerGeneral2_0.Controls.Units
             TANK,
             INFANTRY,
             CANNON,
-            MILITARY_BASE,
+            BASE,
             SOFT,
             MEDIUM,
             HARD

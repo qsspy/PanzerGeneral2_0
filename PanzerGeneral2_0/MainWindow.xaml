@@ -14,7 +14,7 @@
             <ImageBrush ImageSource="Resources/maroon_texture.jpg" />
         </Grid.Background>
         <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="130"/>
+            <ColumnDefinition Width="150"/>
             <ColumnDefinition Width="1*"/>
             <ColumnDefinition Width="130"/>
         </Grid.ColumnDefinitions>
@@ -24,7 +24,8 @@
             <RowDefinition Height="50"/>
         </Grid.RowDefinitions>
         <hex:HexBoard x:Name ="GameplayFrame" Grid.Column="1" Grid.Row="1" 
-                      HexItemMouseEnterEvent="onHexItemMouseEnter" MouseLeave="onBoardMouseLeave"/>
+                      HexItemMouseEnterEvent="onHexItemMouseEnter" MouseLeave="onBoardMouseLeave"
+                      UnitCombatEvent="onEncounterEnd"/>
         <!-- Left Panel -->
         <StackPanel Grid.Row="1" Grid.Column="0" Orientation="Vertical" VerticalAlignment="Center">
             <!-- Attack History Panel-->
@@ -39,9 +40,9 @@
                     <RowDefinition Height="11*"/>
                     <RowDefinition Height="1*"/>
                 </Grid.RowDefinitions>
-                <TextBlock Text="Sample Attack History Test Test" HorizontalAlignment="Center" VerticalAlignment="Center"
-                       Grid.Column="1" Grid.Row="1"
-                       TextWrapping="WrapWithOverflow"/>
+                <ScrollViewer Name="AttackHistoryBoxScroll" Grid.Column="1" Grid.Row="1" VerticalScrollBarVisibility="Auto">
+                    <TextBlock Name="AttackHistoryBox" TextWrapping="WrapWithOverflow"/>
+                </ScrollViewer>
                 <Grid.Background>
                     <ImageBrush ImageSource="Resources/board.png" />
                 </Grid.Background>
