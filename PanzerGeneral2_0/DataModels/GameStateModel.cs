@@ -16,9 +16,9 @@ namespace PanzerGeneral2_0.DataModels
         public static int GAME_STATE_SINGLE_ROW_ID = 1;
 
         public int Id { get; set; }
-        public TeamInfo CurrentTurn { get; set; }
+        public TeamInfo? CurrentTurn { get; set; }
 
         //jezeli uzytkownik zapisal gre po wygraniu ktorejs z druzyn (na wszelki wypadek), moze byc nullem
-        public TeamInfo WinnerTeamCode { get; set; }
+        public TeamInfo? WinnerTeamCode { get; set; }
     }
 }

@@ -248,7 +248,6 @@
     <Compile Include="CustomEventArgs\HexItemEventArgs.cs" />
     <Compile Include="CustomEventArgs\UnitCombatEventArgs.cs" />
     <Compile Include="Databases\SqliteDbContext.cs" />
-    <Compile Include="DataModels\BattleHistoryRowModel.cs" />
     <Compile Include="DataModels\GameStateModel.cs" />
     <Compile Include="DataModels\UnitModel.cs" />
     <Compile Include="Factories\HexPointFactory.cs" />
