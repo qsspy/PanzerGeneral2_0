@@ -73,14 +73,14 @@ namespace PanzerGeneral2_0.Controls.Other
             }
         }
 
-
         private int _dotCount = 1;
-        private int _dotCountEditInterval = 500;
+        private int _dotCountEditInterval = 200;
         public int SimulatedWaitTime { get; set; } = 0;
         public string WaitingMessage { get; set; } = "Loading";
         public string FinishLoadingMessage { get; set; } = "Loading Finished!";
         public string ConfirmButtonText { get; set; } = "OK";
         public Action OnLoadingListener { get; set; } = null;
+        private bool _onLoadingTaskCompleted = false;
         public Action<object, EventArgs> OnFinishButtonClickListener { get; set; } = null;
 
 
@@ -101,21 +101,27 @@ namespace PanzerGeneral2_0.Controls.Other
 
         public void startLoading()
         {
-            Task.Run(executeTask);
+            Task.Run(runWaitingMessageAnimation);
+            if(OnLoadingListener != null)
+            {
+                Task.Run(executeLoadingTask);
+            }
         }
 
-        private async void executeTask()
+        private async void runWaitingMessageAnimation()
         {
             long timeElapsed = 0;
 
             //simulated wait
 
-            while(timeElapsed < SimulatedWaitTime)
+            while (timeElapsed < SimulatedWaitTime || !_onLoadingTaskCompleted)
             {
                 string newWaitingMessage = WaitingMessage;
-                foreach(var i in Enumerable.Range(0, _dotCount))
+                var i = 0;
+                while(i < _dotCount)
                 {
                     newWaitingMessage += ".";
+                    i++;
                 }
                 _dotCount = _dotCount % 3 + 1;
                 Application.Current.Dispatcher.Invoke(new Action(() => { Message.Text = newWaitingMessage; }));
@@ -123,16 +129,18 @@ namespace PanzerGeneral2_0.Controls.Other
                 await Task.Delay(_dotCountEditInterval);
             }
 
-            //target async operation
-
-            OnLoadingListener?.Invoke();
-
             Application.Current.Dispatcher.Invoke(new Action(() =>
             {
                 Message.Text = FinishLoadingMessage;
                 FinishButton.Visibility = Visibility.Visible;
             }));
 
+        }
+
+        private void executeLoadingTask()
+        {
+            OnLoadingListener?.Invoke();
+            _onLoadingTaskCompleted = true;
         }
 
         public PanzerLoadingDialogControl attachToPanel(Panel panel)

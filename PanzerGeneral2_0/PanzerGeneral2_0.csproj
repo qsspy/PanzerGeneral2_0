@@ -247,6 +247,8 @@
     <Compile Include="Controls\Units\Unit.cs" />
     <Compile Include="CustomEventArgs\HexItemEventArgs.cs" />
     <Compile Include="CustomEventArgs\UnitCombatEventArgs.cs" />
+    <Compile Include="Databases\IDatabaseDao.cs" />
+    <Compile Include="Databases\SqliteDao.cs" />
     <Compile Include="Databases\SqliteDbContext.cs" />
     <Compile Include="DataModels\GameStateModel.cs" />
     <Compile Include="DataModels\UnitModel.cs" />
@@ -262,6 +264,11 @@
     </Page>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Migrations\20210114163312_InitialCreate.cs" />
+    <Compile Include="Migrations\20210114163312_InitialCreate.designer.cs">
+      <DependentUpon>20210114163312_InitialCreate.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\SqliteDbContextModelSnapshot.cs" />
     <Compile Include="Properties\AssemblyInfo.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -280,6 +287,9 @@
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
     <None Include="packages.config" />
+    <Content Include="PanzerDB.sqlite">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
