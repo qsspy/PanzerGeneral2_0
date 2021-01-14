@@ -180,7 +180,7 @@ namespace PanzerGeneral2_0.Controls.Grid
             ResetCheckedElements();
 
             // zaznaczenie możliwych ruchów lub ataków
-            if (checkedHexPoint.Unit != null && checkedHexPoint.Unit.UnitKind != Unit.UnitInfo.MILITARY_BASE)
+            if (checkedHexPoint.Unit != null && checkedHexPoint.Unit.UnitKind != Unit.UnitInfo.BASE)
             {
                 lastUnitChecked = index;
                 IEnumerable<HexPoint> area = GetMovementRange(checkedHexPoint, mouseButton == MouseButton.Left ? checkedHexPoint.Unit.MoveRange : checkedHexPoint.Unit.AttackRange);

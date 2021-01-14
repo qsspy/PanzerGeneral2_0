@@ -1,4 +1,5 @@
-﻿using PanzerGeneral2_0.Controls.Other;
+﻿using PanzerGeneral2_0.Controls.Grid;
+using PanzerGeneral2_0.Controls.Other;
 using PanzerGeneral2_0.Controls.Units;
 using System;
 using System.Collections.Generic;
@@ -229,6 +230,94 @@ namespace PanzerGeneral2_0
                     .create()
                     .attachToPanel(GameplayFrame.UnitDetailsWindow)
                     .startLoading();
+            }
+        }
+
+        private void onEncounterEnd(object sender, CustomEventArgs.UnitCombatEventArgs e)
+        {
+            if(sender is HexBoard)
+            {
+                var messageText = "";
+
+                string attackerColorCode;
+                string defenderColorCode;
+
+                Unit notNullUnit;
+                if (e.Attacker != null)
+                {
+                    notNullUnit = e.Attacker;
+                }
+                else
+                {
+                    notNullUnit = e.Defender;
+                }
+
+                if(notNullUnit.TeamCode == Unit.TeamInfo.TEAM_A)
+                {
+                    attackerColorCode = Unit.TEAM_A_COLOR_CODE;
+                    defenderColorCode = Unit.TEAM_B_COLOR_CODE;
+                }
+                else
+                {
+                    attackerColorCode = Unit.TEAM_B_COLOR_CODE;
+                    defenderColorCode = Unit.TEAM_A_COLOR_CODE;
+                }
+                
+                
+                if(AttackHistoryBox.Text.Length != 0)
+                {
+                    AttackHistoryBox.Inlines.Add(new Run("\n\n"));
+                }
+
+                if(e.IsCounterattack)
+                {
+
+                    AttackHistoryBox.Inlines.Add(new Run($"{e.Attacker.UnitKind}") { 
+                        Foreground = new SolidColorBrush((Color)ColorConverter.ConvertFromString(attackerColorCode)),
+                        FontWeight = FontWeights.Bold});
+                    AttackHistoryBox.Inlines.Add(new Run(" strikes back with "));
+                    AttackHistoryBox.Inlines.Add(new Run($"{e.DamagePoints}") {FontWeight = FontWeights.Bold });
+
+                    if(e.Attacker == null)
+                    {
+                        AttackHistoryBox.Inlines.Add(new Run(" points of damage and kills the attacker."));
+                    }
+                    else
+                    {
+                        AttackHistoryBox.Inlines.Add(new Run(" points of damage."));
+                    }
+                } 
+                else
+                {
+
+                    AttackHistoryBox.Inlines.Add(new Run($"{e.Attacker.UnitKind}") { 
+                        Foreground = new SolidColorBrush((Color)ColorConverter.ConvertFromString(attackerColorCode)),
+                        FontWeight = FontWeights.Bold
+                    });
+
+                    if (e.Defender == null)
+                    {
+                        AttackHistoryBox.Inlines.Add(new Run(" attacks with "));
+                        AttackHistoryBox.Inlines.Add(new Run($"{e.DamagePoints}") { FontWeight = FontWeights.Bold });
+                        AttackHistoryBox.Inlines.Add(new Run(" points of damage and kills opponent."));
+
+
+                    }
+                    else
+                    {
+                        AttackHistoryBox.Inlines.Add(new Run(" attacks "));
+                        AttackHistoryBox.Inlines.Add(new Run($"{e.Defender.UnitKind}") { 
+                            Foreground = new SolidColorBrush((Color)ColorConverter.ConvertFromString(defenderColorCode)),
+                            FontWeight = FontWeights.Bold
+                        });
+                        AttackHistoryBox.Inlines.Add(new Run(" with "));
+                        AttackHistoryBox.Inlines.Add(new Run($"{e.DamagePoints}") { FontWeight = FontWeights.Bold });
+                        AttackHistoryBox.Inlines.Add(new Run(" points of damage."));
+                    }
+                }
+
+                AttackHistoryBoxScroll.ScrollToEnd();
+
             }
         }
     }
