@@ -1,6 +1,7 @@
 ﻿using PanzerGeneral2_0.Controls.Grid.Helpers;
 using PanzerGeneral2_0.Controls.Units;
 using PanzerGeneral2_0.CustomEventArgs;
+using PanzerGeneral2_0.DataModels;
 using PanzerGeneral2_0.Factories;
 using System;
 using System.Collections.Generic;
@@ -24,7 +25,7 @@ namespace PanzerGeneral2_0.Controls.Grid
     public partial class HexBoard : UserControl
     {
 
-        private readonly List<HexPoint> hexPoints = new List<HexPoint>();
+        public List<HexPoint> HexPoints = new List<HexPoint>();
 
         public int lastUnitChecked;   // jeśli < 0 brak zaznaczonej jednostki, w p.p. indeks pola zaznaczonej jednostki
 
@@ -59,9 +60,9 @@ namespace PanzerGeneral2_0.Controls.Grid
                 var index = Board.ItemContainerGenerator.IndexFromContainer(point);
                 int x = index / Board.ColumnCount;
                 int y = index % Board.ColumnCount;
-                HexPointTerrainInfo terrainInfo = hexPoints[index].Terrain;
+                HexPointTerrainInfo terrainInfo = HexPoints[index].Terrain;
                 HexItemEventArgs args = new HexItemEventArgs(x, y, terrainInfo);
-                args.OwnedUnit = hexPoints[index].Unit;
+                args.OwnedUnit = HexPoints[index].Unit;
 
                 HexItemMouseEnterEvent?.Invoke(this, args);
             }
@@ -141,11 +142,26 @@ namespace PanzerGeneral2_0.Controls.Grid
                             break;
                     }
 
-                    hexPoints.Add(hexPoint);
+                    HexPoints.Add(hexPoint);
                 }
             }
 
-            Board.ItemsSource = hexPoints;
+            Board.ItemsSource = HexPoints;
+        }
+
+        public void DistributeLoadedUnitsOnBoard(IEnumerable<UnitModel> unitModels)
+        {
+            foreach(var point in HexPoints)
+            {
+                point.UnbindUnitFromHex();
+            }
+
+            foreach(var model in unitModels)
+            {
+                var loadedUnit = UnitFactory.BuildUnit(model.UnitKind, model.TeamCode);
+                loadedUnit.Hp = model.Hp;
+                GetHexAt(model.XPosition, model.YPosition).BindUnitToHex(loadedUnit);
+            }
         }
 
         /**
@@ -160,17 +176,17 @@ namespace PanzerGeneral2_0.Controls.Grid
                 // przeniesienie jednostki jeśli kliknięto zaznaczony hexpoint terenu lewym przyciskiem myszy
                 if (checkedHexPoint.Background.Opacity == CheckedHexPointInfo.TERRAIN_CHECKED && mouseButton == MouseButton.Left)
                 {
-                    hexPoints[index].BindUnitToHex(hexPoints[lastUnitChecked].UnbindUnitFromHex());
+                    HexPoints[index].BindUnitToHex(HexPoints[lastUnitChecked].UnbindUnitFromHex());
                 }
 
                 // walka jednostek jeśli kliknięto zaznaczony hexpoint z wrogą jednostką prawym przyciskiem myszy
                 else if (checkedHexPoint.Background.Opacity == CheckedHexPointInfo.ATTACK_CHECKED && mouseButton == MouseButton.Right)
                 {
                     // atak
-                    hexPoints[index] = CombatOfUnits(hexPoints[lastUnitChecked], hexPoints[index], false);
+                    HexPoints[index] = CombatOfUnits(HexPoints[lastUnitChecked], HexPoints[index], false);
 
                     // kontratak
-                    hexPoints[lastUnitChecked] = CombatOfUnits(hexPoints[index], hexPoints[lastUnitChecked], true);
+                    HexPoints[lastUnitChecked] = CombatOfUnits(HexPoints[index], HexPoints[lastUnitChecked], true);
                 }
 
                 ResetCheckedElements();
@@ -185,18 +201,18 @@ namespace PanzerGeneral2_0.Controls.Grid
                 lastUnitChecked = index;
                 IEnumerable<HexPoint> area = GetMovementRange(checkedHexPoint, mouseButton == MouseButton.Left ? checkedHexPoint.Unit.MoveRange : checkedHexPoint.Unit.AttackRange);
 
-                foreach (int i in Enumerable.Range(0, hexPoints.Count))
+                foreach (int i in Enumerable.Range(0, HexPoints.Count))
                 {
                     // ruch - hexpoint musi znajdować się w zasięgu i nie może zawierać innej sojuszniczej jednostki
-                    if (area.Contains(hexPoints[i]) && hexPoints[i].Unit == null && mouseButton == MouseButton.Left)
+                    if (area.Contains(HexPoints[i]) && HexPoints[i].Unit == null && mouseButton == MouseButton.Left)
                     {
-                        hexPoints[i].Background.Opacity = CheckedHexPointInfo.TERRAIN_CHECKED;
+                        HexPoints[i].Background.Opacity = CheckedHexPointInfo.TERRAIN_CHECKED;
                     }
 
                     // atak - hexpoint musi znajdować się w zasięgu i musi zawierać wrogą jednostkę
-                    else if (area.Contains(hexPoints[i]) && hexPoints[i].Unit != null && hexPoints[i].Unit.TeamCode != checkedHexPoint.Unit.TeamCode && mouseButton == MouseButton.Right)
+                    else if (area.Contains(HexPoints[i]) && HexPoints[i].Unit != null && HexPoints[i].Unit.TeamCode != checkedHexPoint.Unit.TeamCode && mouseButton == MouseButton.Right)
                     {
-                        hexPoints[i].Background.Opacity = CheckedHexPointInfo.ATTACK_CHECKED;
+                        HexPoints[i].Background.Opacity = CheckedHexPointInfo.ATTACK_CHECKED;
                     }
                 }
             }
@@ -266,7 +282,7 @@ namespace PanzerGeneral2_0.Controls.Grid
         private IEnumerable<HexPoint> GetMovementRange(HexPoint checkedIntPoint, int moveReamaining)
         {
             // ustalenie listy sąsiadujących hexpointów
-            HashSet<HexPoint> area = hexPoints.Where(element => (new HexArrayHelper().GetNeighbours(new IntSize(Board.RowCount, Board.ColumnCount),checkedIntPoint.Point)).Contains(element.Point)).ToHashSet();
+            HashSet<HexPoint> area = HexPoints.Where(element => (new HexArrayHelper().GetNeighbours(new IntSize(Board.RowCount, Board.ColumnCount),checkedIntPoint.Point)).Contains(element.Point)).ToHashSet();
 
             foreach (HexPoint hexPoint in area)
             {
@@ -283,17 +299,22 @@ namespace PanzerGeneral2_0.Controls.Grid
         /**
          * Metoda resetująca zaznaczony zakres ruchu jednostki
          */
-        private void ResetCheckedElements()
+        public void ResetCheckedElements()
         {
             foreach (int i in Enumerable.Range(0, Board.Items.Count))
             {
-                hexPoints[i].Background.Opacity = CheckedHexPointInfo.NOT_CHECKED;
+                HexPoints[i].Background.Opacity = CheckedHexPointInfo.NOT_CHECKED;
             }
         }
 
         public HexPoint GetHexAt(int index)
         {
-            return hexPoints[index];
+            return HexPoints[index];
+        }
+
+        public HexPoint GetHexAt(int x, int y)
+        {
+            return HexPoints[x + y * Board.ColumnCount];
         }
     }
 }

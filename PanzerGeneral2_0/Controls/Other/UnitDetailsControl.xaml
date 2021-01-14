@@ -68,16 +68,8 @@
                         <Label Content="{Binding Path=HardAttackValue,Mode=OneTime}" Foreground="White" FontSize="10" Padding="2"/>
                     </StackPanel>
                     <StackPanel Orientation="Horizontal">
-                        <Label Content="Soft Defence : " Foreground="White" FontSize="10" Padding="2"/>
-                        <Label Content="{Binding Path=SoftDefenceValue,Mode=OneTime}" Foreground="White" FontSize="10" Padding="2"/>
-                    </StackPanel>
-                    <StackPanel Orientation="Horizontal">
-                        <Label Content="Medium Defence : " Foreground="White" FontSize="10" Padding="2"/>
-                        <Label Content="{Binding Path=MediumDefenceValue,Mode=OneTime}" Foreground="White" FontSize="10" Padding="2"/>
-                    </StackPanel>
-                    <StackPanel Orientation="Horizontal" Margin="0,0,0,10">
-                        <Label Content="Hard Defence : " Foreground="White" FontSize="10" Padding="2"/>
-                        <Label Content="{Binding Path=HardDefenceValue,Mode=OneTime}" Foreground="White" FontSize="10" Padding="2"/>
+                        <Label Content="Defence : " Foreground="White" FontSize="10" Padding="2"/>
+                        <Label Content="{Binding Path=DefenceValue,Mode=OneTime}" Foreground="White" FontSize="10" Padding="2"/>
                     </StackPanel>
                     <StackPanel Orientation="Horizontal" Margin="0, 0, 0, 10">
                         <Label Content="Toughness :" Foreground="White" FontSize="10" Padding="2"/>

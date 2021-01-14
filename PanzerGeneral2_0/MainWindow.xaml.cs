@@ -5,6 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
@@ -192,15 +193,24 @@ namespace PanzerGeneral2_0
                 _activeDialog = DialogType.LOADING_DIALOG;
 
                 new PanzerLoadingDialogControl.Builder()
-                    .setSimulatedWaitTime(5000)
+                    .setOnLoadingListener(()=> 
+                    {
+                        var hexPoints = LoadButton.GetAllUnitsFromDb();
+                        if(hexPoints.Count() != 0)
+                        {
+                            var gameState = LoadButton.GetGameStateModelFromDb();
+                            //TODO - zrobić coś póżniej z załadowanym stanem gry
+                            Application.Current.Dispatcher.Invoke(() => {
+
+                                GameplayFrame.DistributeLoadedUnitsOnBoard(hexPoints);
+                                GameplayFrame.ResetCheckedElements();
+                            });
+                        }
+                    })
                     .setOnFinishButtonClickListener((btnSender, args) =>
                     {
                         GameplayFrame.UnitDetailsWindow.Children.Clear();
                         _activeDialog = null;
-                    })
-                    .setOnLoadingListener(() =>
-                    {
-                        //TODO - ladowanie z bazy danych
                     })
                     .create()
                     .attachToPanel(GameplayFrame.UnitDetailsWindow)
@@ -215,7 +225,6 @@ namespace PanzerGeneral2_0
                 _activeDialog = DialogType.LOADING_DIALOG;
 
                 new PanzerLoadingDialogControl.Builder()
-                    .setSimulatedWaitTime(5000)
                     .setWaitingMessage("Saving")
                     .setFinishLoadingMessage("Saving Finished!")
                     .setOnFinishButtonClickListener((btnSender, args) =>
@@ -225,7 +234,8 @@ namespace PanzerGeneral2_0
                     })
                     .setOnLoadingListener(() =>
                     {
-                        //TODO - zapisywanie do bazy danych
+                        SaveButton.InsertNewUnitSet(GameplayFrame.HexPoints);
+                        SaveButton.UpdateGameStateInDb(null, null);
                     })
                     .create()
                     .attachToPanel(GameplayFrame.UnitDetailsWindow)

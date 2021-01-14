@@ -15,6 +15,7 @@ namespace PanzerGeneral2_0.Databases
 
 
         public DbSet<UnitModel> Unit { get; set; }
+        public DbSet<GameStateModel> GameState { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
