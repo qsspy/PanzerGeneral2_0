@@ -164,6 +164,62 @@ namespace PanzerGeneral2_0.Controls.Grid
             }
         }
 
+        public void ResetGame()
+        {
+            foreach (var point in HexPoints)
+            {
+                point.UnbindUnitFromHex();
+            }
+
+            String unitDistribution = Properties.Resources.unit_distribution;
+
+            var rowCount = Board.RowCount;
+            var columnCount = Board.ColumnCount;
+
+            string[] unitLines = unitDistribution.Split('\n');
+
+            //dla kazdej lini z pliku
+            foreach (int i in Enumerable.Range(0, rowCount))
+            {
+                var unitLine = unitLines[i].Split(' ');
+
+                //dla kazdej cyfry z pliku
+                foreach (int j in Enumerable.Range(0, columnCount))
+                {
+                    switch (Int32.Parse(unitLine[j]))
+                    {
+                        case 1:
+                            GetHexAt(j, i).BindUnitToHex(UnitFactory.BuildUnit("Infantry", Unit.TeamInfo.TEAM_A));
+                            break;
+                        case 2:
+                            GetHexAt(j, i).BindUnitToHex(UnitFactory.BuildUnit("Cannon", Unit.TeamInfo.TEAM_A));
+                            break;
+                        case 3:
+                            GetHexAt(j, i).BindUnitToHex(UnitFactory.BuildUnit("Tank", Unit.TeamInfo.TEAM_A));
+                            break;
+                        case 4:
+                            GetHexAt(j, i).BindUnitToHex(UnitFactory.BuildUnit("Base", Unit.TeamInfo.TEAM_A));
+                            break;
+                        case 5:
+                            GetHexAt(j, i).BindUnitToHex(UnitFactory.BuildUnit("Infantry", Unit.TeamInfo.TEAM_B));
+                            break;
+                        case 6:
+                            GetHexAt(j, i).BindUnitToHex(UnitFactory.BuildUnit("Cannon", Unit.TeamInfo.TEAM_B));
+                            break;
+                        case 7:
+                            GetHexAt(j, i).BindUnitToHex(UnitFactory.BuildUnit("Tank", Unit.TeamInfo.TEAM_B));
+                            break;
+                        case 8:
+                            GetHexAt(j, i).BindUnitToHex(UnitFactory.BuildUnit("Base", Unit.TeamInfo.TEAM_B));
+                            break;
+                        default:
+                            break;
+                    }
+                }
+            }
+            ResetCheckedElements();
+        }
+
         /**
          * Metoda realizująca interakcję klikniętego hexpointa w zależności od użytego klawisza myszy
          */

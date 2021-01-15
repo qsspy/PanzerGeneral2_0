@@ -149,7 +149,8 @@ namespace PanzerGeneral2_0
                     new PanzerAlertDialog.Builder()
                            .SetMessage("Are you sure you want to reset the game?")
                            .setOnPositiveClickButtonListener("YES", (btnSender, args) => {
-                               //TODO
+                               AttackHistoryBox.Text = "";
+                               GameplayFrame.ResetGame();
                                GameplayFrame.UnitDetailsWindow.Children.Clear();
                                _activeDialog = null;
                            })
@@ -201,7 +202,7 @@ namespace PanzerGeneral2_0
                             var gameState = LoadButton.GetGameStateModelFromDb();
                             //TODO - zrobić coś póżniej z załadowanym stanem gry
                             Application.Current.Dispatcher.Invoke(() => {
-
+                                AttackHistoryBox.Text = "";
                                 GameplayFrame.DistributeLoadedUnitsOnBoard(hexPoints);
                                 GameplayFrame.ResetCheckedElements();
                             });
