@@ -245,7 +245,9 @@
       <DependentUpon>TankContol.xaml</DependentUpon>
     </Compile>
     <Compile Include="Controls\Units\Unit.cs" />
+    <Compile Include="CustomEventArgs\GameOverEventArgs.cs" />
     <Compile Include="CustomEventArgs\HexItemEventArgs.cs" />
+    <Compile Include="CustomEventArgs\TeamMovementEventArgs.cs" />
     <Compile Include="CustomEventArgs\UnitCombatEventArgs.cs" />
     <Compile Include="Databases\IDatabaseDao.cs" />
     <Compile Include="Databases\SqliteDao.cs" />

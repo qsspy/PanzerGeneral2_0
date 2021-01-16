@@ -114,7 +114,7 @@ namespace PanzerGeneral2_0
         {
             if(sender is Button)
             {
-                int selectedHexIndex = GameplayFrame.lastUnitChecked;
+                int selectedHexIndex = GameplayFrame.LastUnitIndex;
 
                 if (selectedHexIndex >= 0 && GameplayFrame.GetHexAt(selectedHexIndex).Unit != null)
                 {
@@ -330,6 +330,11 @@ namespace PanzerGeneral2_0
                 AttackHistoryBoxScroll.ScrollToEnd();
 
             }
+        }
+
+        private void onPassButtonClick(object sender, RoutedEventArgs e)
+        {
+            GameplayFrame.NextTeam();
         }
     }
 }
