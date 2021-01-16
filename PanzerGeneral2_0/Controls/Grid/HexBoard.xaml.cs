@@ -9,6 +9,7 @@ using System.Linq;
 using System.Windows.Controls;
 using System.Windows.Input;
 using static PanzerGeneral2_0.Controls.Grid.HexPoint;
+using static PanzerGeneral2_0.Controls.Units.Unit;
 
 namespace PanzerGeneral2_0.Controls.Grid
 {
@@ -26,23 +27,31 @@ namespace PanzerGeneral2_0.Controls.Grid
     {
 
         public List<HexPoint> HexPoints = new List<HexPoint>();
-
-        public int lastUnitChecked;   // jeśli < 0 brak zaznaczonej jednostki, w p.p. indeks pola zaznaczonej jednostki
+        public List<Unit> CurrentTeamUnitsToMove = new List<Unit>();
+        public List<Unit> CurrentTeamUnitsToShot = new List<Unit>();
+        public int LastUnitIndex;
+        public TeamInfo? CurrentTeam;
+        public int TeamMovementsCounter;
 
         public event EventHandler<HexItemEventArgs> HexItemMouseEnterEvent;
-
         public event EventHandler<UnitCombatEventArgs> UnitCombatEvent;
+        public event EventHandler<TeamMovementEventArgs> TeamMovementEvent;
+        public event EventHandler<GameOverEventArgs> GameOverEvent;
+
 
         public HexBoard()
         {
             InitializeComponent();
            
-            this.lastUnitChecked = -1;
+            this.LastUnitIndex = -1;
+            TeamMovementsCounter = 1;
+            CurrentTeam = (TeamInfo)new Random().Next(0, 2);
 
             UnitDetailsWindow.Children.Add(new InfantryControl(Unit.TeamInfo.TEAM_A));
             UnitDetailsWindow.Children.Clear();
 
             DistributeHexesOnBoard();
+            NextTeam();
         }
 
         /**
@@ -67,6 +76,28 @@ namespace PanzerGeneral2_0.Controls.Grid
                 HexItemMouseEnterEvent?.Invoke(this, args);
             }
 
+        }
+
+        /**
+         * Przygotowuje turę dla zaczynającego gracza.
+         */
+        public void NextTeam()
+        {
+            CurrentTeam = CurrentTeam == TeamInfo.TEAM_A ? TeamInfo.TEAM_B : TeamInfo.TEAM_A;
+            int roundNumber = ++TeamMovementsCounter / 2;
+            TeamMovementEvent?.Invoke(this, new TeamMovementEventArgs(CurrentTeam, roundNumber));
+
+            CurrentTeamUnitsToMove.Clear();
+            CurrentTeamUnitsToShot.Clear();
+
+            foreach (HexPoint hexPoint in HexPoints)
+            {
+                if (hexPoint.Unit != null && hexPoint.Unit.TeamCode == CurrentTeam)
+                {
+                    CurrentTeamUnitsToMove.Add(hexPoint.Unit);
+                    CurrentTeamUnitsToShot.Add(hexPoint.Unit);
+                }
+            }
         }
 
         /**
@@ -232,17 +263,20 @@ namespace PanzerGeneral2_0.Controls.Grid
                 // przeniesienie jednostki jeśli kliknięto zaznaczony hexpoint terenu lewym przyciskiem myszy
                 if (checkedHexPoint.Background.Opacity == CheckedHexPointInfo.TERRAIN_CHECKED && mouseButton == MouseButton.Left)
                 {
-                    HexPoints[index].BindUnitToHex(HexPoints[lastUnitChecked].UnbindUnitFromHex());
+                    CurrentTeamUnitsToMove.Remove(HexPoints[LastUnitIndex].Unit);
+                    HexPoints[index].BindUnitToHex(HexPoints[LastUnitIndex].UnbindUnitFromHex());
                 }
 
                 // walka jednostek jeśli kliknięto zaznaczony hexpoint z wrogą jednostką prawym przyciskiem myszy
                 else if (checkedHexPoint.Background.Opacity == CheckedHexPointInfo.ATTACK_CHECKED && mouseButton == MouseButton.Right)
                 {
                     // atak
-                    HexPoints[index] = CombatOfUnits(HexPoints[lastUnitChecked], HexPoints[index], false);
+                    HexPoints[index] = CombatOfUnits(HexPoints[LastUnitIndex], HexPoints[index], false);
 
                     // kontratak
-                    HexPoints[lastUnitChecked] = CombatOfUnits(HexPoints[index], HexPoints[lastUnitChecked], true);
+                    HexPoints[LastUnitIndex] = CombatOfUnits(HexPoints[index], HexPoints[LastUnitIndex], true);
+
+                    CurrentTeamUnitsToShot.Remove(HexPoints[LastUnitIndex].Unit);
                 }
 
                 ResetCheckedElements();
@@ -252,26 +286,59 @@ namespace PanzerGeneral2_0.Controls.Grid
             ResetCheckedElements();
 
             // zaznaczenie możliwych ruchów lub ataków
-            if (checkedHexPoint.Unit != null && checkedHexPoint.Unit.UnitKind != Unit.UnitInfo.BASE)
+            if (checkedHexPoint.Unit != null 
+                && checkedHexPoint.Unit.UnitKind != Unit.UnitInfo.BASE
+                && (mouseButton == MouseButton.Left ? CurrentTeamUnitsToMove.Contains(checkedHexPoint.Unit) : CurrentTeamUnitsToShot.Contains(checkedHexPoint.Unit)))
             {
-                lastUnitChecked = index;
+                LastUnitIndex = index;
                 IEnumerable<HexPoint> area = GetMovementRange(checkedHexPoint, mouseButton == MouseButton.Left ? checkedHexPoint.Unit.MoveRange : checkedHexPoint.Unit.AttackRange);
 
                 foreach (int i in Enumerable.Range(0, HexPoints.Count))
                 {
                     // ruch - hexpoint musi znajdować się w zasięgu i nie może zawierać innej sojuszniczej jednostki
-                    if (area.Contains(HexPoints[i]) && HexPoints[i].Unit == null && mouseButton == MouseButton.Left)
+                    if (area.Contains(HexPoints[i])
+                        && HexPoints[i].Unit == null 
+                        && mouseButton == MouseButton.Left)
                     {
                         HexPoints[i].Background.Opacity = CheckedHexPointInfo.TERRAIN_CHECKED;
                     }
 
                     // atak - hexpoint musi znajdować się w zasięgu i musi zawierać wrogą jednostkę
-                    else if (area.Contains(HexPoints[i]) && HexPoints[i].Unit != null && HexPoints[i].Unit.TeamCode != checkedHexPoint.Unit.TeamCode && mouseButton == MouseButton.Right)
+                    else if (area.Contains(HexPoints[i]) 
+                        && HexPoints[i].Unit != null 
+                        && HexPoints[i].Unit.TeamCode != checkedHexPoint.Unit.TeamCode 
+                        && mouseButton == MouseButton.Right)
                     {
                         HexPoints[i].Background.Opacity = CheckedHexPointInfo.ATTACK_CHECKED;
                     }
                 }
             }
+        }
+
+        /**
+         * Sprawdza czy nastąpił koniec gry po zniszczeniu jednostki podanej w argumencie.
+         */
+        private void CheckIfGameOver(Unit unit)
+        {
+            WinInfo winInfo = WinInfo.ALL_UNITS_DESTROYED;
+            foreach (HexPoint hexPoint in HexPoints)
+            {
+                // jeśli znajdzie się choć jeden Unit wroga, który nie jest bazą, gra trwa dalej
+                if (hexPoint.Unit != null 
+                    && hexPoint.Unit.TeamCode == unit.TeamCode 
+                    && hexPoint.Unit.UnitKind == UnitInfo.BASE)
+                {
+                    return;
+                }
+            }
+
+            if (unit.UnitKind == UnitInfo.BASE)
+            {
+                winInfo = WinInfo.BASE_DESTROYED;
+            }
+
+            GameOverEvent?.Invoke(this, new GameOverEventArgs(unit.TeamCode == TeamInfo.TEAM_A ? TeamInfo.TEAM_B : TeamInfo.TEAM_A, winInfo));
+            Console.WriteLine("Pograne");
         }
 
         /**
@@ -324,9 +391,10 @@ namespace PanzerGeneral2_0.Controls.Grid
             UnitCombatEvent?.Invoke(this, new UnitCombatEventArgs(attacker.Unit, defender.Unit, damagePoints, isCounterattack));
 
             // usuń jednostkę z planszy, jeśli straciła całe życie
+            // sprawdź czy to koniec gry
             if (defender.Unit.Hp <= 0)
             {
-                defender.UnbindUnitFromHex();
+                CheckIfGameOver(defender.UnbindUnitFromHex());
             }
 
             return defender;
@@ -338,7 +406,7 @@ namespace PanzerGeneral2_0.Controls.Grid
         private IEnumerable<HexPoint> GetMovementRange(HexPoint checkedIntPoint, int moveReamaining)
         {
             // ustalenie listy sąsiadujących hexpointów
-            HashSet<HexPoint> area = HexPoints.Where(element => (new HexArrayHelper().GetNeighbours(new IntSize(Board.RowCount, Board.ColumnCount),checkedIntPoint.Point)).Contains(element.Point)).ToHashSet();
+            HashSet<HexPoint> area = HexPoints.Where(element => (new HexArrayHelper().GetNeighbours(new IntSize(Board.RowCount, Board.ColumnCount), checkedIntPoint.Point)).Contains(element.Point)).ToHashSet();
 
             foreach (HexPoint hexPoint in area)
             {

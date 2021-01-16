@@ -16,8 +16,8 @@
             MaxFuel = 50;
             CurrentFuel = 50;
             SoftAttackValue = 3;
-            MediumAttackValue = 7;
-            HardAttackValue = 5;
+            MediumAttackValue = 5;
+            HardAttackValue = 7;
             DefenceValue = 3;
             Toughness = UnitInfo.MEDIUM;
             MoveRange = 2;

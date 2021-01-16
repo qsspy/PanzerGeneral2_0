@@ -70,7 +70,7 @@
                 <Label Grid.Row="2" Grid.Column="1" Content="Team X" 
                        HorizontalAlignment="Center" VerticalAlignment="Center"
                        FontSize="22" FontWeight="Bold"/>
-                <Button Grid.Row="3" Grid.Column="1" Content="PASS" Margin="5"/>
+                <Button Grid.Row="3" Grid.Column="1" Content="PASS" Margin="5" Click="onPassButtonClick"/>
             </Grid>
 
         </StackPanel>
