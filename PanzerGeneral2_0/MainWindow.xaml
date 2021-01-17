@@ -25,7 +25,8 @@
         </Grid.RowDefinitions>
         <hex:HexBoard x:Name ="GameplayFrame" Grid.Column="1" Grid.Row="1" 
                       HexItemMouseEnterEvent="onHexItemMouseEnter" MouseLeave="onBoardMouseLeave"
-                      UnitCombatEvent="onEncounterEnd"/>
+                      UnitCombatEvent="onEncounterEnd" TeamMovementEvent="onTeamChange"
+                      GameOverEvent="onGameOver"/>
         <!-- Left Panel -->
         <StackPanel Grid.Row="1" Grid.Column="0" Orientation="Vertical" VerticalAlignment="Center">
             <!-- Attack History Panel-->
@@ -67,7 +68,8 @@
                 <Label Grid.Row="1" Grid.Column="1" Content="Turn : " 
                        HorizontalAlignment="Center" VerticalAlignment="Center"
                        FontSize="22" FontWeight="Bold"/>
-                <Label Grid.Row="2" Grid.Column="1" Content="Team X" 
+                <Label Name="TeamLabel"
+                        Grid.Row="2" Grid.Column="1" Content="Team X" 
                        HorizontalAlignment="Center" VerticalAlignment="Center"
                        FontSize="22" FontWeight="Bold"/>
                 <Button Grid.Row="3" Grid.Column="1" Content="PASS" Margin="5" Click="onPassButtonClick"/>

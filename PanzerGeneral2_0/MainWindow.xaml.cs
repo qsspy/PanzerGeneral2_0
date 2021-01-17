@@ -41,6 +41,7 @@ namespace PanzerGeneral2_0
         public MainWindow()
         {
             InitializeComponent();
+            GameplayFrame.NextTeam();
         }
 
         private void onHexItemMouseEnter(object sender, CustomEventArgs.HexItemEventArgs e)
@@ -335,6 +336,61 @@ namespace PanzerGeneral2_0
         private void onPassButtonClick(object sender, RoutedEventArgs e)
         {
             GameplayFrame.NextTeam();
+        }
+
+        private void onTeamChange(object sender, CustomEventArgs.TeamMovementEventArgs e)
+        {
+            if(sender is HexBoard)
+            {
+                if(e.CurrentTeam == Unit.TeamInfo.TEAM_A)
+                {
+                    TeamLabel.Content = "Team A";
+                    TeamLabel.Foreground = new SolidColorBrush((Color)ColorConverter.ConvertFromString(Unit.TEAM_A_COLOR_CODE));
+
+                } else
+                {
+                    TeamLabel.Content = "Team B";
+                    TeamLabel.Foreground = new SolidColorBrush((Color)ColorConverter.ConvertFromString(Unit.TEAM_B_COLOR_CODE));
+                }
+            }
+        }
+
+        private void onGameOver(object sender, CustomEventArgs.GameOverEventArgs e)
+        {
+            if(sender is HexBoard)
+            {
+                if (_activeDialog == null)
+                {
+                    _activeDialog = DialogType.ALERT_DIALOG;
+
+
+                    var message = "";
+
+                    if(e.WinningTeam == Unit.TeamInfo.TEAM_A)
+                    {
+                        message = "Team A has won! Do you want to reset the game?";
+                    } else
+                    {
+                        message = "Team B has won! Do you want to reset the game?";
+                    }
+
+                    new PanzerAlertDialog.Builder()
+                           .SetMessage(message)
+                           .setOnPositiveClickButtonListener("YES", (btnSender, args) => {
+
+                               AttackHistoryBox.Text = "";
+                               GameplayFrame.ResetGame();
+                               GameplayFrame.UnitDetailsWindow.Children.Clear();
+                               _activeDialog = null;
+                           })
+                           .setOnNegativeClickButtonListener("QUIT", (btnSender, args) => {
+                               
+                               Application.Current.Shutdown();
+                           })
+                           .create()
+                           .attachToPanel(GameplayFrame.UnitDetailsWindow);
+                }
+            }
         }
     }
 }

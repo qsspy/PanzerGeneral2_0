@@ -51,7 +51,6 @@ namespace PanzerGeneral2_0.Controls.Grid
             UnitDetailsWindow.Children.Clear();
 
             DistributeHexesOnBoard();
-            NextTeam();
         }
 
         /**
