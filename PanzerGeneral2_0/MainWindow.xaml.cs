@@ -336,6 +336,7 @@ namespace PanzerGeneral2_0
         private void onPassButtonClick(object sender, RoutedEventArgs e)
         {
             GameplayFrame.NextTeam();
+            GameplayFrame.ResetCheckedElements();
         }
 
         private void onTeamChange(object sender, CustomEventArgs.TeamMovementEventArgs e)

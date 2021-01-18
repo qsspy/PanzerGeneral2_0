@@ -110,7 +110,6 @@ namespace PanzerGeneral2_0.Controls.Units
                     default:
                         sound = null;
                         break;
-
                 }
             }
 

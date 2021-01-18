@@ -333,29 +333,14 @@ namespace PanzerGeneral2_0.Controls.Grid
         }
 
         /**
-         * Sprawdza czy nastąpił koniec gry po zniszczeniu jednostki podanej w argumencie.
+         * Sprawdza czy nastąpił koniec gry, czyli zniszczenie bazy.
          */
         private void CheckIfGameOver(Unit unit)
         {
-            WinInfo winInfo = WinInfo.ALL_UNITS_DESTROYED;
-            foreach (HexPoint hexPoint in HexPoints)
-            {
-                // jeśli znajdzie się choć jeden Unit wroga, który nie jest bazą, gra trwa dalej
-                if (hexPoint.Unit != null 
-                    && hexPoint.Unit.TeamCode == unit.TeamCode 
-                    && hexPoint.Unit.UnitKind == UnitInfo.BASE)
-                {
-                    return;
-                }
-            }
-
             if (unit.UnitKind == UnitInfo.BASE)
             {
-                winInfo = WinInfo.BASE_DESTROYED;
+                GameOverEvent?.Invoke(this, new GameOverEventArgs(unit.TeamCode == TeamInfo.TEAM_A ? TeamInfo.TEAM_B : TeamInfo.TEAM_A));
             }
-
-            GameOverEvent?.Invoke(this, new GameOverEventArgs(unit.TeamCode == TeamInfo.TEAM_A ? TeamInfo.TEAM_B : TeamInfo.TEAM_A, winInfo));
-            Console.WriteLine("Pograne");
         }
 
         /**
