@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.ComponentModel;
 using System.Windows.Controls;
 
 namespace PanzerGeneral2_0.Controls.Units
@@ -66,14 +61,6 @@ namespace PanzerGeneral2_0.Controls.Units
             }
         }
 
-        public void NotifyPropertyChanged(string propertyName)
-        {
-            if (PropertyChanged != null)
-            {
-                PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
-            }
-        }
-
         public Unit(TeamInfo team) 
         {
             TeamCode = team;
@@ -89,6 +76,11 @@ namespace PanzerGeneral2_0.Controls.Units
                 HpLabelColor = TEAM_B_COLOR_CODE;
             }
             
+        }
+
+        private void NotifyPropertyChanged(string propertyName)
+        {
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
     }
 }

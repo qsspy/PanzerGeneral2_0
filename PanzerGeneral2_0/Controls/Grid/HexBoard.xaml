@@ -6,6 +6,7 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:hx="clr-namespace:HexGridControl;assembly=HexGridControl" 
              xmlns:units="clr-namespace:PanzerGeneral2_0.Controls.Units"
+             xmlns:gif="http://wpfanimatedgif.codeplex.com"
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800">
     <Grid>
@@ -41,15 +42,14 @@
                             </Setter.Value>
                         </Setter>
                         <EventSetter
-                        Event="PreviewMouseLeftButtonDown"
-                        Handler="HexItem_PreviewMouseButtonDown" />
+                            Event="PreviewMouseLeftButtonDown"
+                            Handler="HexItem_PreviewMouseButtonDown" />
                         <EventSetter 
-                        Event="PreviewMouseRightButtonDown"
-                        Handler="HexItem_PreviewMouseButtonDown"
-                        />
+                            Event="PreviewMouseRightButtonDown"
+                            Handler="HexItem_PreviewMouseButtonDown" />
                         <EventSetter 
-                        Event="MouseEnter"
-                        Handler="HexItem_MouseEnter"/>
+                            Event="MouseEnter"
+                            Handler="HexItem_MouseEnter"/>
                     </Style>
                 </hx:HexList.ItemContainerStyle>
             </hx:HexList>

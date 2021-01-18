@@ -90,7 +90,7 @@ namespace PanzerGeneral2_0
                     case CannonControl cc:
                         unitKind = "Cannon";
                         break;
-                    case TankContol tc:
+                    case TankControl tc:
                         unitKind = "Tank";
                         break;
                     case MilitaryBaseControl mbc:
