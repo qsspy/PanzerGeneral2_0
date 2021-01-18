@@ -22,5 +22,6 @@ namespace PanzerGeneral2_0.DataModels
 
         //jezeli uzytkownik zapisal gre po wygraniu ktorejs z druzyn (na wszelki wypadek), moze byc nullem
         public TeamInfo? WinnerTeamCode { get; set; }
+        public int RoundNumber { get; set; }
     }
 }

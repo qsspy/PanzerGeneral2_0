@@ -201,10 +201,10 @@ namespace PanzerGeneral2_0
                         if(hexPoints.Count() != 0)
                         {
                             var gameState = LoadButton.GetGameStateModelFromDb();
-                            //TODO - zrobić coś póżniej z załadowanym stanem gry
+
                             Application.Current.Dispatcher.Invoke(() => {
                                 AttackHistoryBox.Text = "";
-                                GameplayFrame.DistributeLoadedUnitsOnBoard(hexPoints);
+                                GameplayFrame.DistributeLoadedUnitsOnBoard(hexPoints,gameState);
                                 GameplayFrame.ResetCheckedElements();
                             });
                         }
@@ -236,8 +236,8 @@ namespace PanzerGeneral2_0
                     })
                     .setOnLoadingListener(() =>
                     {
-                        SaveButton.InsertNewUnitSet(GameplayFrame.HexPoints);
-                        SaveButton.UpdateGameStateInDb(null, null);
+                        SaveButton.InsertNewUnitSet(GameplayFrame.HexPoints,GameplayFrame.CurrentTeamUnitsToMove, GameplayFrame.CurrentTeamUnitsToShot);
+                        SaveButton.UpdateGameStateInDb(GameplayFrame.CurrentTeam,null,GameplayFrame.TeamMovementsCounter);
                     })
                     .create()
                     .attachToPanel(GameplayFrame.UnitDetailsWindow)

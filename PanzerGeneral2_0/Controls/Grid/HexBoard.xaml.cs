@@ -6,6 +6,7 @@ using PanzerGeneral2_0.Factories;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 using static PanzerGeneral2_0.Controls.Grid.HexPoint;
@@ -26,12 +27,12 @@ namespace PanzerGeneral2_0.Controls.Grid
     public partial class HexBoard : UserControl
     {
 
-        public List<HexPoint> HexPoints = new List<HexPoint>();
-        public List<Unit> CurrentTeamUnitsToMove = new List<Unit>();
-        public List<Unit> CurrentTeamUnitsToShot = new List<Unit>();
-        public int LastUnitIndex;
-        public TeamInfo? CurrentTeam;
-        public int TeamMovementsCounter;
+        public List<HexPoint> HexPoints { get; set; } = new List<HexPoint>();
+        public List<Unit> CurrentTeamUnitsToMove { get; set; } = new List<Unit>();
+        public List<Unit> CurrentTeamUnitsToShot { get; set; } = new List<Unit>();
+        public int LastUnitIndex { get; set; }
+        public TeamInfo? CurrentTeam { get; set; }
+        public int TeamMovementsCounter { get; set; }
 
         public event EventHandler<HexItemEventArgs> HexItemMouseEnterEvent;
         public event EventHandler<UnitCombatEventArgs> UnitCombatEvent;
@@ -45,9 +46,6 @@ namespace PanzerGeneral2_0.Controls.Grid
             this.LastUnitIndex = -1;
             TeamMovementsCounter = 1;
             CurrentTeam = (TeamInfo) new Random().Next(0, 2);
-
-            UnitDetailsWindow.Children.Add(new InfantryControl(Unit.TeamInfo.TEAM_A));
-            UnitDetailsWindow.Children.Clear();
 
             DistributeHexesOnBoard();
         }
@@ -177,9 +175,16 @@ namespace PanzerGeneral2_0.Controls.Grid
             Board.ItemsSource = HexPoints;
         }
 
-        public void DistributeLoadedUnitsOnBoard(IEnumerable<UnitModel> unitModels)
+        public void DistributeLoadedUnitsOnBoard(IEnumerable<UnitModel> unitModels, GameStateModel stateModel)
         {
-            foreach(var point in HexPoints)
+            CurrentTeam = stateModel.CurrentTurn;
+            TeamMovementsCounter = stateModel.RoundNumber;
+            TeamMovementEvent?.Invoke(this, new TeamMovementEventArgs(CurrentTeam, TeamMovementsCounter));
+
+            CurrentTeamUnitsToMove.Clear();
+            CurrentTeamUnitsToShot.Clear();
+
+            foreach (var point in HexPoints)
             {
                 point.UnbindUnitFromHex();
             }
@@ -188,16 +193,21 @@ namespace PanzerGeneral2_0.Controls.Grid
             {
                 var loadedUnit = UnitFactory.BuildUnit(model.UnitKind, model.TeamCode);
                 loadedUnit.Hp = model.Hp;
+                if (model.CanAttack) CurrentTeamUnitsToShot.Add(loadedUnit);
+                if (model.CanMove) CurrentTeamUnitsToMove.Add(loadedUnit);
                 GetHexAt(model.XPosition, model.YPosition).BindUnitToHex(loadedUnit);
             }
         }
 
         public void ResetGame()
         {
-            foreach (var point in HexPoints)
+
+            foreach(var point in HexPoints)
             {
                 point.UnbindUnitFromHex();
             }
+
+            ResetCheckedElements();
 
             String unitDistribution = Properties.Resources.unit_distribution;
 
@@ -214,38 +224,48 @@ namespace PanzerGeneral2_0.Controls.Grid
                 //dla kazdej cyfry z pliku
                 foreach (int j in Enumerable.Range(0, columnCount))
                 {
+                    var currentHex = GetHexAt(j, i);
                     switch (Int32.Parse(unitLine[j]))
                     {
                         case 1:
-                            GetHexAt(j, i).BindUnitToHex(UnitFactory.BuildUnit("Infantry", Unit.TeamInfo.TEAM_A));
+                            currentHex.BindUnitToHex(UnitFactory.BuildUnit("Infantry", Unit.TeamInfo.TEAM_A));
                             break;
                         case 2:
-                            GetHexAt(j, i).BindUnitToHex(UnitFactory.BuildUnit("Cannon", Unit.TeamInfo.TEAM_A));
+                            currentHex.BindUnitToHex(UnitFactory.BuildUnit("Cannon", Unit.TeamInfo.TEAM_A));
                             break;
                         case 3:
-                            GetHexAt(j, i).BindUnitToHex(UnitFactory.BuildUnit("Tank", Unit.TeamInfo.TEAM_A));
+                            currentHex.BindUnitToHex(UnitFactory.BuildUnit("Tank", Unit.TeamInfo.TEAM_A));
                             break;
                         case 4:
-                            GetHexAt(j, i).BindUnitToHex(UnitFactory.BuildUnit("Base", Unit.TeamInfo.TEAM_A));
+                            currentHex.BindUnitToHex(UnitFactory.BuildUnit("Base", Unit.TeamInfo.TEAM_A));
                             break;
                         case 5:
-                            GetHexAt(j, i).BindUnitToHex(UnitFactory.BuildUnit("Infantry", Unit.TeamInfo.TEAM_B));
+                            currentHex.BindUnitToHex(UnitFactory.BuildUnit("Infantry", Unit.TeamInfo.TEAM_B));
                             break;
                         case 6:
-                            GetHexAt(j, i).BindUnitToHex(UnitFactory.BuildUnit("Cannon", Unit.TeamInfo.TEAM_B));
+                            currentHex.BindUnitToHex(UnitFactory.BuildUnit("Cannon", Unit.TeamInfo.TEAM_B));
                             break;
                         case 7:
-                            GetHexAt(j, i).BindUnitToHex(UnitFactory.BuildUnit("Tank", Unit.TeamInfo.TEAM_B));
+                            currentHex.BindUnitToHex(UnitFactory.BuildUnit("Tank", Unit.TeamInfo.TEAM_B));
                             break;
                         case 8:
-                            GetHexAt(j, i).BindUnitToHex(UnitFactory.BuildUnit("Base", Unit.TeamInfo.TEAM_B));
+                            currentHex.BindUnitToHex(UnitFactory.BuildUnit("Base", Unit.TeamInfo.TEAM_B));
                             break;
                         default:
                             break;
                     }
+                   
                 }
             }
-            ResetCheckedElements();
+            if ((TeamInfo)new Random().Next(0, 2) == CurrentTeam)
+            {
+                NextTeam();   
+            }
+            else
+            {
+                NextTeam();
+                NextTeam();
+            }
         }
 
         /**

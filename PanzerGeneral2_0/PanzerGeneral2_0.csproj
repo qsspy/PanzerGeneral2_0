@@ -302,6 +302,14 @@
     <Compile Include="Migrations\20210114163312_InitialCreate.designer.cs">
       <DependentUpon>20210114163312_InitialCreate.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\20210118134349_Version_2.cs" />
+    <Compile Include="Migrations\20210118134349_Version_2.designer.cs">
+      <DependentUpon>20210118134349_Version_2.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\20210118140617_Version_3.cs" />
+    <Compile Include="Migrations\20210118140617_Version_3.designer.cs">
+      <DependentUpon>20210118140617_Version_3.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\SqliteDbContextModelSnapshot.cs" />
     <Compile Include="Properties\AssemblyInfo.cs">
       <SubType>Code</SubType>

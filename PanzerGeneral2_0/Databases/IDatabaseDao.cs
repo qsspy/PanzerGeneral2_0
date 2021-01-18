@@ -11,14 +11,14 @@ namespace PanzerGeneral2_0.Databases
 {
     interface IDatabaseDao
     {
-        void InsertUnitToDb(Unit unit, IntPoint coordinates);
+        void InsertUnitToDb(Unit unit, IntPoint coordinates, bool canAttack, bool canMove);
         void RemoveAllUnitsFromDB();
-        void InsertNewUnitSet(IEnumerable<HexPoint> listOfHexes);
+        void InsertNewUnitSet(IEnumerable<HexPoint> listOfHexes, IEnumerable<Unit> movingUnits, IEnumerable<Unit> attackingUnits);
         IEnumerable<UnitModel> GetAllUnitsFromDb();
-        void InsertGameStateToDb(Unit.TeamInfo? currentTurn, Unit.TeamInfo? winnerTeam);
+        void InsertGameStateToDb(Unit.TeamInfo? currentTurn, Unit.TeamInfo? winnerTeam, int roundCount);
         bool IsGameStateInDb();
         void RemoveGameStateFromDb();
-        void UpdateGameStateInDb(Unit.TeamInfo? currentTurn, Unit.TeamInfo? winnerTeam);
+        void UpdateGameStateInDb(Unit.TeamInfo? currentTurn, Unit.TeamInfo? winnerTeam, int roundCount);
         GameStateModel GetGameStateFromDb();
     }
 }
