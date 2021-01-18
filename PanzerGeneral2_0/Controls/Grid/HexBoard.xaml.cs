@@ -38,14 +38,13 @@ namespace PanzerGeneral2_0.Controls.Grid
         public event EventHandler<TeamMovementEventArgs> TeamMovementEvent;
         public event EventHandler<GameOverEventArgs> GameOverEvent;
 
-
         public HexBoard()
         {
             InitializeComponent();
            
             this.LastUnitIndex = -1;
             TeamMovementsCounter = 1;
-            CurrentTeam = (TeamInfo)new Random().Next(0, 2);
+            CurrentTeam = (TeamInfo) new Random().Next(0, 2);
 
             UnitDetailsWindow.Children.Add(new InfantryControl(Unit.TeamInfo.TEAM_A));
             UnitDetailsWindow.Children.Clear();
@@ -113,7 +112,6 @@ namespace PanzerGeneral2_0.Controls.Grid
 
             var rowCount = Board.RowCount;
             var columnCount = Board.ColumnCount;
-
 
             string[] terrainLines = terrainDistribution.Split('\n');
             string[] unitLines = unitDistribution.Split('\n');
@@ -380,7 +378,7 @@ namespace PanzerGeneral2_0.Controls.Grid
             {
                 int attackValue = random.Next(1, 21) + attackIndicator - defenseIndicator + counterattackIndicator;
                 
-                // jeśli wartość ataku przekroczyła 15 - zniszcz jedną jednostkę
+                // jeśli wartość ataku przekroczyła 15 - strzał celny
                 if (attackValue > 15)
                 {
                     damagePoints++;
@@ -394,6 +392,7 @@ namespace PanzerGeneral2_0.Controls.Grid
             // sprawdź czy to koniec gry
             if (defender.Unit.Hp <= 0)
             {
+                defender.DisplayExplosion();
                 CheckIfGameOver(defender.UnbindUnitFromHex());
             }
 

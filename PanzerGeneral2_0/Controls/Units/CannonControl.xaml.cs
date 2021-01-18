@@ -3,6 +3,7 @@
     /// <summary>
     /// Logika interakcji dla klasy Cannon.xaml
     /// </summary>
+
     public partial class CannonControl : Unit
     {
         public CannonControl(TeamInfo team) : base(team)

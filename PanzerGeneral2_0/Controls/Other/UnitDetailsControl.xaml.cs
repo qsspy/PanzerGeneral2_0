@@ -41,7 +41,7 @@ namespace PanzerGeneral2_0.Controls.Other
                 case CannonControl cc:
                     UnitKind = "Cannon";
                     break;
-                case TankContol tc:
+                case TankControl tc:
                     UnitKind = "Tank";
                     break;
                 case MilitaryBaseControl mbc:

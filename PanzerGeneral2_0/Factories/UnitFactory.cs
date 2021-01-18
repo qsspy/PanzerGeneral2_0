@@ -18,7 +18,7 @@ namespace PanzerGeneral2_0.Factories
             }
             else if(type == "Tank")
             {
-                return new TankContol(team);
+                return new TankControl(team);
             }
             else if (type == "Base")
             {
@@ -42,7 +42,7 @@ namespace PanzerGeneral2_0.Factories
             }
             else if (type == Unit.UnitInfo.TANK)
             {
-                return new TankContol(team);
+                return new TankControl(team);
             }
             else if (type == Unit.UnitInfo.BASE)
             {

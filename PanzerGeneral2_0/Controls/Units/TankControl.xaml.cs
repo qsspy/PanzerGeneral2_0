@@ -3,9 +3,9 @@
     /// <summary>
     /// Logika interakcji dla klasy TankContol.xaml
     /// </summary>
-    public partial class TankContol : Unit
+    public partial class TankControl : Unit
     {
-        public TankContol(TeamInfo team) : base(team)
+        public TankControl(TeamInfo team) : base(team)
         {
             DataContext = this;
             TexturePath = "/PanzerGeneral2_0;component/Resources/tank.png";
