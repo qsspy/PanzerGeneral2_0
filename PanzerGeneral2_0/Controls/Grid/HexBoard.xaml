@@ -5,8 +5,6 @@
              xmlns:items="clr-namespace:PanzerGeneral2_0.Controls.Grid"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:hx="clr-namespace:HexGridControl;assembly=HexGridControl" 
-             xmlns:units="clr-namespace:PanzerGeneral2_0.Controls.Units"
-             xmlns:gif="http://wpfanimatedgif.codeplex.com"
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800">
     <Grid>
@@ -21,7 +19,7 @@
             <RowDefinition Height="10"/>
         </Grid.RowDefinitions>
         <!-- game window-->
-        <ScrollViewer Grid.Column="1" Grid.Row="1" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Auto">
+        <ScrollViewer Grid.Column="1" Grid.Row="1" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Auto" >
             <ScrollViewer.Background>
                 <ImageBrush ImageSource="/PanzerGeneral2_0;component/Resources/game_background_dark.jpg"/>
             </ScrollViewer.Background>

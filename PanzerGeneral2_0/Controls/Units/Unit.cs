@@ -1,4 +1,6 @@
 ﻿using System.ComponentModel;
+using System.IO;
+using System.Media;
 using System.Windows.Controls;
 
 namespace PanzerGeneral2_0.Controls.Units
@@ -76,6 +78,43 @@ namespace PanzerGeneral2_0.Controls.Units
                 HpLabelColor = TEAM_B_COLOR_CODE;
             }
             
+        }
+
+        /**
+         * Efekt eksplozji
+        */
+        public void Explosion(bool isFinalExplosion)
+        {
+            UnmanagedMemoryStream sound;
+
+            if (isFinalExplosion)
+            {
+                sound = Properties.Resources.explosion_final;
+            }
+            else
+            {
+                switch (UnitKind)
+                {
+                    case UnitInfo.INFANTRY:
+                        sound = Properties.Resources.explosion_infantry;
+                        break;
+
+                    case UnitInfo.CANNON:
+                        sound = Properties.Resources.explosion_cannon;
+                        break;
+
+                    case UnitInfo.TANK:
+                        sound = Properties.Resources.explosion_tank;
+                        break;
+
+                    default:
+                        sound = null;
+                        break;
+
+                }
+            }
+
+            new SoundPlayer(sound).Play();
         }
 
         private void NotifyPropertyChanged(string propertyName)

@@ -103,9 +103,36 @@ namespace PanzerGeneral2_0.Properties {
         /// <summary>
         ///   Wyszukuje zlokalizowany zasób typu System.IO.UnmanagedMemoryStream podobny do zasobu System.IO.MemoryStream.
         /// </summary>
-        public static System.IO.UnmanagedMemoryStream explosion {
+        public static System.IO.UnmanagedMemoryStream explosion_cannon {
             get {
-                return ResourceManager.GetStream("explosion", resourceCulture);
+                return ResourceManager.GetStream("explosion_cannon", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Wyszukuje zlokalizowany zasób typu System.IO.UnmanagedMemoryStream podobny do zasobu System.IO.MemoryStream.
+        /// </summary>
+        public static System.IO.UnmanagedMemoryStream explosion_final {
+            get {
+                return ResourceManager.GetStream("explosion_final", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Wyszukuje zlokalizowany zasób typu System.IO.UnmanagedMemoryStream podobny do zasobu System.IO.MemoryStream.
+        /// </summary>
+        public static System.IO.UnmanagedMemoryStream explosion_infantry {
+            get {
+                return ResourceManager.GetStream("explosion_infantry", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Wyszukuje zlokalizowany zasób typu System.IO.UnmanagedMemoryStream podobny do zasobu System.IO.MemoryStream.
+        /// </summary>
+        public static System.IO.UnmanagedMemoryStream explosion_tank {
+            get {
+                return ResourceManager.GetStream("explosion_tank", resourceCulture);
             }
         }
         

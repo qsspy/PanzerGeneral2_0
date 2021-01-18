@@ -388,11 +388,18 @@ namespace PanzerGeneral2_0.Controls.Grid
             UnitCombatEvent?.Invoke(this, new UnitCombatEventArgs(attacker.Unit, defender.Unit, damagePoints, isCounterattack));
 
             // usuń jednostkę z planszy, jeśli straciła całe życie
+            // włącz dźwięk wybuchu jednostki
             // sprawdź czy to koniec gry
             if (defender.Unit.Hp <= 0)
             {
-                defender.DisplayExplosion();
+                attacker.Unit.Explosion(true);
                 CheckIfGameOver(defender.UnbindUnitFromHex());
+            }
+
+            // jeśli jednostka nie jest zniszczona włącz dźwięk strzału atakującej jednostki
+            else if (!isCounterattack && damagePoints > 0)
+            {
+                attacker.Unit.Explosion(false);
             }
 
             return defender;

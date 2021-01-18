@@ -2,12 +2,14 @@
 using PanzerGeneral2_0.Controls.Other;
 using PanzerGeneral2_0.Controls.Units;
 using System.ComponentModel;
+using System.Media;
+using System.Threading;
+using static PanzerGeneral2_0.Controls.Units.Unit;
 
 namespace PanzerGeneral2_0.Controls.Grid
 {
     public class HexPoint : HexItem, INotifyPropertyChanged
     {
-
         public enum HexPointTerrainInfo
         {
             PLAIN,
@@ -60,14 +62,6 @@ namespace PanzerGeneral2_0.Controls.Grid
             Unit tempUnit = this.Unit;
             this.Unit = null;
             return tempUnit;
-        }
-
-        /**
-         * Wyświetla animację eksplozji jednostki
-         */
-        public void DisplayExplosion()
-        {
-            Content = new Explosion();
         }
 
         private void NotifyPropertyChanged(string v)
