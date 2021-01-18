@@ -17,5 +17,7 @@ namespace PanzerGeneral2_0.DataModels
         public int XPosition { get; set; }
         public int YPosition { get; set; }
         public int Hp { get; set; }
+        public bool CanMove { get; set; }
+        public bool CanAttack { get; set; }
     }
 }

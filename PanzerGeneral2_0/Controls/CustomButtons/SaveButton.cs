@@ -15,14 +15,14 @@ namespace PanzerGeneral2_0.Controls.CustomButtons
     {
         private IDatabaseDao _sqliteDao = new SqliteDao();
 
-        public void InsertNewUnitSet(IEnumerable<HexPoint> listOfHexes)
+        public void InsertNewUnitSet(IEnumerable<HexPoint> listOfHexes, IEnumerable<Unit> movingUnits, IEnumerable<Unit> attackingUnits)
         {
-            _sqliteDao.InsertNewUnitSet(listOfHexes);
+            _sqliteDao.InsertNewUnitSet(listOfHexes,movingUnits,attackingUnits);
         }
 
-        public void UpdateGameStateInDb(Unit.TeamInfo? currentTurn, Unit.TeamInfo? winnerTeam)
+        public void UpdateGameStateInDb(Unit.TeamInfo? currentTurn, Unit.TeamInfo? winnerTeam, int roundCount)
         {
-            _sqliteDao.UpdateGameStateInDb(currentTurn, winnerTeam);
+            _sqliteDao.UpdateGameStateInDb(currentTurn, winnerTeam, roundCount);
         }
     }
 }
