@@ -12,7 +12,7 @@ namespace PanzerGeneral2_0.Databases
     public class SqliteDao : IDatabaseDao
     {
 
-        public void InsertUnitToDb(Unit unit, IntPoint coordinates)
+        public void InsertUnitToDb(Unit unit, IntPoint coordinates, bool unitCanAttack, bool unitCanMove)
         {
             using (var _dbContext = new SqliteDbContext())
             {
@@ -22,7 +22,9 @@ namespace PanzerGeneral2_0.Databases
                     UnitKind = unit.UnitKind,
                     XPosition = coordinates.X,
                     YPosition = coordinates.Y,
-                    Hp = unit.Hp
+                    Hp = unit.Hp,
+                    CanAttack = unitCanAttack,
+                    CanMove = unitCanMove
                 };
                 _dbContext.Add(model);
                 _dbContext.SaveChanges();
@@ -40,14 +42,16 @@ namespace PanzerGeneral2_0.Databases
 
 
         //Kiedy chcemy zapisac wszystkie jednostki za jednym zamachem
-        public void InsertNewUnitSet(IEnumerable<HexPoint> listOfHexes)
+        public void InsertNewUnitSet(IEnumerable<HexPoint> listOfHexes, IEnumerable<Unit> movingUnits, IEnumerable<Unit> attackingUnits)
         {
             RemoveAllUnitsFromDB();
             foreach(var hex in listOfHexes)
             {
                 if(hex.Unit != null)
                 {
-                    InsertUnitToDb(hex.Unit, hex.Point);
+                    bool canMove = movingUnits.Contains(hex.Unit);
+                    bool canAttack = attackingUnits.Contains(hex.Unit);
+                    InsertUnitToDb(hex.Unit, hex.Point,canAttack,canMove);
                 }
             }
         }
@@ -60,7 +64,7 @@ namespace PanzerGeneral2_0.Databases
             }
         }
 
-        public void InsertGameStateToDb(Unit.TeamInfo? currentTurn, Unit.TeamInfo? winnerTeam)
+        public void InsertGameStateToDb(Unit.TeamInfo? currentTurn, Unit.TeamInfo? winnerTeam, int roundCount)
         {
             using(var _dbContext = new SqliteDbContext())
             {
@@ -68,7 +72,8 @@ namespace PanzerGeneral2_0.Databases
                 {
                     Id = GameStateModel.GAME_STATE_SINGLE_ROW_ID,
                     CurrentTurn = currentTurn,
-                    WinnerTeamCode = winnerTeam
+                    WinnerTeamCode = winnerTeam,
+                    RoundNumber = roundCount
                 };
 
                 _dbContext.Add(model);
@@ -95,14 +100,14 @@ namespace PanzerGeneral2_0.Databases
 
 
         //Wstawia aktualny stan gry do bazy
-        public void UpdateGameStateInDb(Unit.TeamInfo? currentTurn, Unit.TeamInfo? winnerTeam)
+        public void UpdateGameStateInDb(Unit.TeamInfo? currentTurn, Unit.TeamInfo? winnerTeam, int roundCount)
         {
             if(IsGameStateInDb())
             {
                 RemoveGameStateFromDb();
             }
 
-            InsertGameStateToDb(currentTurn, winnerTeam);
+            InsertGameStateToDb(currentTurn, winnerTeam, roundCount);
         }
 
         public GameStateModel GetGameStateFromDb()
