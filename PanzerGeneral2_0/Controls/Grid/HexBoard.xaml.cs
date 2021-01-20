@@ -397,8 +397,10 @@ namespace PanzerGeneral2_0.Controls.Grid
             // sprawdź czy to koniec gry
             if (defender.Unit.Hp <= 0)
             {
+                Unit tempUnit = defender.Unit;
                 attacker.Unit.Explosion(true);
-                CheckIfGameOver(defender.UnbindUnitFromHex());
+                defender.SetExplosion();
+                CheckIfGameOver(tempUnit);
             }
 
             // jeśli jednostka nie jest zniszczona włącz dźwięk strzału atakującej jednostki

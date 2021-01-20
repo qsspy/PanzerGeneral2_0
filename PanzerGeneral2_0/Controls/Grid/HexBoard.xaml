@@ -33,7 +33,7 @@
                         <Setter Property="Grid.Row" Value="{Binding Path=Point.Y}"/>
                         <Setter Property="Grid.Column" Value="{Binding Path=Point.X}"/>
                         <Setter Property="BorderThickness" Value="1.5"/>
-                        <Setter Property="Content" Value="{Binding Path=Unit}"/>
+                        <Setter Property="Content" Value="{Binding Path=HexContent}"/>
                         <Setter Property="Background" >
                             <Setter.Value>
                                 <ImageBrush ImageSource="{Binding Path=ImageSource}" />

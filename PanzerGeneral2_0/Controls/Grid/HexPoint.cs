@@ -4,6 +4,7 @@ using PanzerGeneral2_0.Controls.Units;
 using System.ComponentModel;
 using System.Media;
 using System.Threading;
+using System.Windows.Controls;
 using static PanzerGeneral2_0.Controls.Units.Unit;
 
 namespace PanzerGeneral2_0.Controls.Grid
@@ -19,17 +20,18 @@ namespace PanzerGeneral2_0.Controls.Grid
 
         public event PropertyChangedEventHandler PropertyChanged;
 
-        Unit _unit;
-        public Unit Unit 
+        UserControl _hexContent;
+        public UserControl HexContent
         {
-            get { return _unit; }
+            get { return _hexContent; }
             set
             {
-                _unit = value;
-                NotifyPropertyChanged("Unit");
+                _hexContent = value;
+                NotifyPropertyChanged("HexContent");
             }
         }
 
+        public Unit Unit { get; set; }
         public HexPointTerrainInfo Terrain { get; set; }
         public string ImageSource { get; set; }
         public int TerrainModifier { get; set; }
@@ -41,15 +43,22 @@ namespace PanzerGeneral2_0.Controls.Grid
             this.Point = point;
             this.ImageSource = imageSource;
             this.Terrain = terrain;
-            this.TerrainModifier = terrainModifier;
+            this.TerrainModifier = terrainModifier;           
+        }
+
+        public void SetExplosion()
+        {
+            this.Unit = null;
+            SetHexContent(new Explosion());
         }
 
         /**
-         Przydziela podaną jednostkę do HexItem'a
-         */
+        Przydziela podaną jednostkę do HexItem'a
+        */
         public void BindUnitToHex(Unit unit)
         {
             this.Unit = unit;
+            this.HexContent = unit;
             this.Unit.Height = Unit.DEFAULT_UNIT_HEIGHT;
             this.Unit.Width = Unit.DEFAULT_UNIT_WIDTH;
         }
@@ -60,6 +69,7 @@ namespace PanzerGeneral2_0.Controls.Grid
         public Unit UnbindUnitFromHex()
         {
             Unit tempUnit = this.Unit;
+            this.HexContent = null;
             this.Unit = null;
             return tempUnit;
         }
@@ -67,6 +77,11 @@ namespace PanzerGeneral2_0.Controls.Grid
         private void NotifyPropertyChanged(string v)
         {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(v));
+        }
+
+        private void SetHexContent(UserControl content)
+        {
+            this.HexContent = content;
         }
     }
 }
