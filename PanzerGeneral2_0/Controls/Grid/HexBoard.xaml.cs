@@ -6,7 +6,6 @@ using PanzerGeneral2_0.Factories;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 using static PanzerGeneral2_0.Controls.Grid.HexPoint;
@@ -43,6 +42,7 @@ namespace PanzerGeneral2_0.Controls.Grid
         {
             InitializeComponent();
            
+            // wartości startowe dla rozgrywki
             this.LastUnitIndex = -1;
             TeamMovementsCounter = 1;
             CurrentTeam = (TeamInfo) new Random().Next(0, 2);
@@ -58,6 +58,9 @@ namespace PanzerGeneral2_0.Controls.Grid
             SetUnitAfterClickInteraction((HexPoint)sender, e.ChangedButton);
         }
 
+        /*
+         * Metoda po najechaniu kursorem myszy na hex point rzuca wyjątek z danymi hex pointa
+         */
         private void HexItem_MouseEnter(object sender, MouseEventArgs e)
         {
             if (sender is HexPoint point)
@@ -66,16 +69,13 @@ namespace PanzerGeneral2_0.Controls.Grid
                 int x = index / Board.ColumnCount;
                 int y = index % Board.ColumnCount;
                 HexPointTerrainInfo terrainInfo = HexPoints[index].Terrain;
-                HexItemEventArgs args = new HexItemEventArgs(x, y, terrainInfo);
-                args.OwnedUnit = HexPoints[index].Unit;
-
+                HexItemEventArgs args = new HexItemEventArgs(x, y, terrainInfo) { OwnedUnit = HexPoints[index].Unit };
                 HexItemMouseEnterEvent?.Invoke(this, args);
             }
-
         }
 
         /**
-         * Przygotowuje turę dla zaczynającego gracza.
+         * Przygotowuje turę dla zaczynającego gracza
          */
         public void NextTeam()
         {
@@ -175,6 +175,9 @@ namespace PanzerGeneral2_0.Controls.Grid
             Board.ItemsSource = HexPoints;
         }
 
+        /**
+         * Metoda realizująca rozmieszczenie hexpointów na hexboardzie
+         */
         public void DistributeLoadedUnitsOnBoard(IEnumerable<UnitModel> unitModels, GameStateModel stateModel)
         {
             CurrentTeam = stateModel.CurrentTurn;
@@ -199,6 +202,9 @@ namespace PanzerGeneral2_0.Controls.Grid
             }
         }
 
+        /**
+         * Metoda resetuje ułożenie gry do stanu pierwotnego
+         */
         public void ResetGame()
         {
 
@@ -333,7 +339,7 @@ namespace PanzerGeneral2_0.Controls.Grid
         }
 
         /**
-         * Sprawdza czy nastąpił koniec gry, czyli zniszczenie bazy.
+         * Metoda sprawdza czy nastąpił koniec gry, czyli zniszczenie bazy.
          */
         private void CheckIfGameOver(Unit unit)
         {
@@ -398,15 +404,15 @@ namespace PanzerGeneral2_0.Controls.Grid
             if (defender.Unit.Hp <= 0)
             {
                 Unit tempUnit = defender.Unit;
-                attacker.Unit.Explosion(true);
-                defender.SetExplosion();
+                attacker.Unit.PlayExplosionSound(true);
+                defender.DisplayExplosion();
                 CheckIfGameOver(tempUnit);
             }
 
             // jeśli jednostka nie jest zniszczona włącz dźwięk strzału atakującej jednostki
             else if (!isCounterattack && damagePoints > 0)
             {
-                attacker.Unit.Explosion(false);
+                attacker.Unit.PlayExplosionSound(false);
             }
 
             return defender;
@@ -428,7 +434,6 @@ namespace PanzerGeneral2_0.Controls.Grid
                     area = area.Concat(GetMovementRange(hexPoint, moveReamaining - terrainModifier)).ToHashSet();
                 }
             }
-
             return area;
         }
 

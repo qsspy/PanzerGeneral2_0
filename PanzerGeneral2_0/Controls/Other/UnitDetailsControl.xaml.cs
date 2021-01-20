@@ -4,7 +4,6 @@ using System.Windows.Media;
 
 namespace PanzerGeneral2_0.Controls.Other
 {
-
     public partial class UnitDetailsControl : UserControl
     {
         public string TeamCode { get; set; }
@@ -23,8 +22,7 @@ namespace PanzerGeneral2_0.Controls.Other
         public int AttackRange { get; set; }
         public int Hp { get; set; }
         public UnitDetailsControl(Unit unit)
-        {
-            
+        {         
             DataContext = this;
 
             if (unit.TeamCode == Unit.TeamInfo.TEAM_A)

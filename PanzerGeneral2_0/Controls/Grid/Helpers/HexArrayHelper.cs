@@ -18,7 +18,7 @@ namespace PanzerGeneral2_0.Controls.Grid.Helpers
 
     public class HexArrayHelper
     {
-        private HexDirection[] _directions = Enum.GetValues(typeof(HexDirection)).OfType<HexDirection>().ToArray();
+        private readonly HexDirection[] _directions = Enum.GetValues(typeof(HexDirection)).OfType<HexDirection>().ToArray();
 
         public bool IsHorizontal { get; set; }
 
@@ -68,8 +68,7 @@ namespace PanzerGeneral2_0.Controls.Grid.Helpers
                 yield break;
             int idx = 0;
 
-            var points = new List<IntPoint>();
-            points.Add(origin);
+            var points = new List<IntPoint> { origin };
             do
             {
                 IntPoint p = points[idx];

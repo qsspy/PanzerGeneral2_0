@@ -14,7 +14,8 @@
             if(teamCode == TeamInfo.TEAM_A)
             {
                 BaseTexture = "/PanzerGeneral2_0;component/Resources/base_blue.png";
-            } else
+            } 
+            else
             {
                 BaseTexture = "/PanzerGeneral2_0;component/Resources/base_red.png";
             }

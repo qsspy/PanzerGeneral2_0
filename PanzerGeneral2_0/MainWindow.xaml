@@ -24,9 +24,9 @@
             <RowDefinition Height="50"/>
         </Grid.RowDefinitions>
         <hex:HexBoard x:Name ="GameplayFrame" Grid.Column="1" Grid.Row="1" 
-                      HexItemMouseEnterEvent="onHexItemMouseEnter" MouseLeave="onBoardMouseLeave"
-                      UnitCombatEvent="onEncounterEnd" TeamMovementEvent="onTeamChange"
-                      GameOverEvent="onGameOver"/>
+                      HexItemMouseEnterEvent="OnHexItemMouseEnter" MouseLeave="OnBoardMouseLeave"
+                      UnitCombatEvent="OnEncounterEnd" TeamMovementEvent="OnTeamChange"
+                      GameOverEvent="OnGameOver"/>
         <!-- Left Panel -->
         <StackPanel Grid.Row="1" Grid.Column="0" Orientation="Vertical" VerticalAlignment="Center">
             <!-- Attack History Panel-->
@@ -72,7 +72,7 @@
                         Grid.Row="2" Grid.Column="1" Content="Team X" 
                        HorizontalAlignment="Center" VerticalAlignment="Center"
                        FontSize="22" FontWeight="Bold"/>
-                <Button Grid.Row="3" Grid.Column="1" Content="PASS" Margin="5" Click="onPassButtonClick"/>
+                <Button Grid.Row="3" Grid.Column="1" Content="PASS" Margin="5" Click="OnPassButtonClick"/>
             </Grid>
 
         </StackPanel>
@@ -110,15 +110,15 @@
                 <ImageBrush ImageSource="Resources/metal_plate_gold.png"  />
             </Grid.Background>
             <!-- Buttons -->
-            <Button Name="ResetButton" Click="onResetButtonClick"
+            <Button Name="ResetButton" Click="OnResetButtonClick"
                     Grid.Column="1" Grid.Row="1" Content="RESET"/>
-            <btn:SaveButton x:Name="SaveButton" Click="onSaveButtonClick"
+            <btn:SaveButton x:Name="SaveButton" Click="OnSaveButtonClick"
                     Grid.Column="1" Grid.Row="3" Content="SAVE"/>
-            <btn:LoadButton x:Name="LoadButton" Click="onLoadButtonClick"
+            <btn:LoadButton x:Name="LoadButton" Click="OnLoadButtonClick"
                     Grid.Column="1" Grid.Row="5" Content="LOAD"/>
-            <Button Name ="DetailsButton" Click="onUnitDetailsButtonClick"
+            <Button Name ="DetailsButton" Click="OnUnitDetailsButtonClick"
                     Grid.Column="1" Grid.Row="7" Content="UNIT DETAILS" FontSize="8"/>
-            <Button Name="QuitButton" Click="onQuitButtonClick"
+            <Button Name="QuitButton" Click="OnQuitButtonClick"
                     Grid.Column="1" Grid.Row="9" Content="QUIT"/>
         </Grid>
     </Grid>

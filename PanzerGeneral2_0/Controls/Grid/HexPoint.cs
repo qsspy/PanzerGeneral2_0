@@ -2,10 +2,7 @@
 using PanzerGeneral2_0.Controls.Other;
 using PanzerGeneral2_0.Controls.Units;
 using System.ComponentModel;
-using System.Media;
-using System.Threading;
 using System.Windows.Controls;
-using static PanzerGeneral2_0.Controls.Units.Unit;
 
 namespace PanzerGeneral2_0.Controls.Grid
 {
@@ -46,10 +43,13 @@ namespace PanzerGeneral2_0.Controls.Grid
             this.TerrainModifier = terrainModifier;           
         }
 
-        public void SetExplosion()
+        /**
+         * Metoda wyświetlająca efekt eksplozji
+         */
+        public void DisplayExplosion()
         {
             this.Unit = null;
-            SetHexContent(new Explosion());
+            this.HexContent = new Explosion();
         }
 
         /**
@@ -77,11 +77,6 @@ namespace PanzerGeneral2_0.Controls.Grid
         private void NotifyPropertyChanged(string v)
         {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(v));
-        }
-
-        private void SetHexContent(UserControl content)
-        {
-            this.HexContent = content;
         }
     }
 }

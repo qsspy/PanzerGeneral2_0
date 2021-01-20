@@ -1,10 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using PanzerGeneral2_0.DataModels;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace PanzerGeneral2_0.Databases
 {

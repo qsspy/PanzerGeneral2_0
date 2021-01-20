@@ -44,14 +44,13 @@ namespace PanzerGeneral2_0
             GameplayFrame.NextTeam();
         }
 
-        private void onHexItemMouseEnter(object sender, CustomEventArgs.HexItemEventArgs e)
+        private void OnHexItemMouseEnter(object sender, CustomEventArgs.HexItemEventArgs e)
         {
             string x = e.HexXPos.ToString();
             string y = e.HexYPos.ToString();
 
-            string terrainType = "";
-
-            switch(e.TerrainInfo)
+            string terrainType;
+            switch (e.TerrainInfo)
             {
                 case HexPointTerrainInfo.FOREST:
                     terrainType = "Forest";
@@ -74,18 +73,18 @@ namespace PanzerGeneral2_0
 
             } else
             {
-                string teamCode = "";
-                string unitKind = "";
-
-                if(ownedUnit.TeamCode == Unit.TeamInfo.TEAM_A)
+                string teamCode;
+                if (ownedUnit.TeamCode == Unit.TeamInfo.TEAM_A)
                 {
                     teamCode = "Team A";
-                } else
+                }
+                else
                 {
                     teamCode = "Team B";
                 }
 
-                switch(ownedUnit)
+                string unitKind;
+                switch (ownedUnit)
                 {
                     case CannonControl cc:
                         unitKind = "Cannon";
@@ -105,13 +104,13 @@ namespace PanzerGeneral2_0
             }
         }
 
-        private void onBoardMouseLeave(object sender, MouseEventArgs e)
+        private void OnBoardMouseLeave(object sender, MouseEventArgs e)
         {
             HexNameLabel.Content = "";
             UnitNameLabel.Content = "";
         }
 
-        private void onUnitDetailsButtonClick(object sender, RoutedEventArgs e)
+        private void OnUnitDetailsButtonClick(object sender, RoutedEventArgs e)
         {
             if(sender is Button)
             {
@@ -139,7 +138,7 @@ namespace PanzerGeneral2_0
             }
         }
 
-        private void onResetButtonClick(object sender, RoutedEventArgs e)
+        private void OnResetButtonClick(object sender, RoutedEventArgs e)
         {
             if(sender is Button)
             {
@@ -149,23 +148,23 @@ namespace PanzerGeneral2_0
            
                     new PanzerAlertDialog.Builder()
                            .SetMessage("Are you sure you want to reset the game?")
-                           .setOnPositiveClickButtonListener("YES", (btnSender, args) => {
+                           .SetOnPositiveClickButtonListener("YES", (btnSender, args) => {
                                AttackHistoryBox.Text = "";
                                GameplayFrame.ResetGame();
                                GameplayFrame.UnitDetailsWindow.Children.Clear();
                                _activeDialog = null;
                            })
-                           .setOnNegativeClickButtonListener("NO", (btnSender, args) => {
+                           .SetOnNegativeClickButtonListener("NO", (btnSender, args) => {
                                GameplayFrame.UnitDetailsWindow.Children.Clear();
                                _activeDialog = null;
                            })
-                           .create()
-                           .attachToPanel(GameplayFrame.UnitDetailsWindow);
+                           .Create()
+                           .AttachToPanel(GameplayFrame.UnitDetailsWindow);
                 }
             }
         }
 
-        private void onQuitButtonClick(object sender, RoutedEventArgs e)
+        private void OnQuitButtonClick(object sender, RoutedEventArgs e)
         {
             if (sender is Button)
             {
@@ -175,27 +174,27 @@ namespace PanzerGeneral2_0
 
                     new PanzerAlertDialog.Builder()
                            .SetMessage("Are you sure you want to quit the game?")
-                           .setOnPositiveClickButtonListener("YES", (btnSender, args) => {
+                           .SetOnPositiveClickButtonListener("YES", (btnSender, args) => {
                                Application.Current.Shutdown();
                            })
-                           .setOnNegativeClickButtonListener("NOT YET!", (btnSender, args) => {
+                           .SetOnNegativeClickButtonListener("NOT YET!", (btnSender, args) => {
                                GameplayFrame.UnitDetailsWindow.Children.Clear();
                                _activeDialog = null;
                            })
-                           .create()
-                           .attachToPanel(GameplayFrame.UnitDetailsWindow);
+                           .Create()
+                           .AttachToPanel(GameplayFrame.UnitDetailsWindow);
                 }
             }
         }
 
-        private void onLoadButtonClick(object sender, RoutedEventArgs e)
+        private void OnLoadButtonClick(object sender, RoutedEventArgs e)
         {
             if (_activeDialog == null)
             {
                 _activeDialog = DialogType.LOADING_DIALOG;
 
                 new PanzerLoadingDialogControl.Builder()
-                    .setOnLoadingListener(()=> 
+                    .SetOnLoadingListener(()=> 
                     {
                         var hexPoints = LoadButton.GetAllUnitsFromDb();
                         if(hexPoints.Count() != 0)
@@ -209,48 +208,46 @@ namespace PanzerGeneral2_0
                             });
                         }
                     })
-                    .setOnFinishButtonClickListener((btnSender, args) =>
+                    .SetOnFinishButtonClickListener((btnSender, args) =>
                     {
                         GameplayFrame.UnitDetailsWindow.Children.Clear();
                         _activeDialog = null;
                     })
-                    .create()
-                    .attachToPanel(GameplayFrame.UnitDetailsWindow)
-                    .startLoading(); 
+                    .Create()
+                    .AttachToPanel(GameplayFrame.UnitDetailsWindow)
+                    .StartLoading(); 
             }
         }
 
-        private void onSaveButtonClick(object sender, RoutedEventArgs e)
+        private void OnSaveButtonClick(object sender, RoutedEventArgs e)
         {
             if (_activeDialog == null)
             {
                 _activeDialog = DialogType.LOADING_DIALOG;
 
                 new PanzerLoadingDialogControl.Builder()
-                    .setWaitingMessage("Saving")
-                    .setFinishLoadingMessage("Saving Finished!")
-                    .setOnFinishButtonClickListener((btnSender, args) =>
+                    .SetWaitingMessage("Saving")
+                    .SetFinishLoadingMessage("Saving Finished!")
+                    .SetOnFinishButtonClickListener((btnSender, args) =>
                     {
                         GameplayFrame.UnitDetailsWindow.Children.Clear();
                         _activeDialog = null;
                     })
-                    .setOnLoadingListener(() =>
+                    .SetOnLoadingListener(() =>
                     {
                         SaveButton.InsertNewUnitSet(GameplayFrame.HexPoints,GameplayFrame.CurrentTeamUnitsToMove, GameplayFrame.CurrentTeamUnitsToShot);
                         SaveButton.UpdateGameStateInDb(GameplayFrame.CurrentTeam,null,GameplayFrame.TeamMovementsCounter);
                     })
-                    .create()
-                    .attachToPanel(GameplayFrame.UnitDetailsWindow)
-                    .startLoading();
+                    .Create()
+                    .AttachToPanel(GameplayFrame.UnitDetailsWindow)
+                    .StartLoading();
             }
         }
 
-        private void onEncounterEnd(object sender, CustomEventArgs.UnitCombatEventArgs e)
+        private void OnEncounterEnd(object sender, CustomEventArgs.UnitCombatEventArgs e)
         {
             if(sender is HexBoard)
             {
-                var messageText = "";
-
                 string attackerColorCode;
                 string defenderColorCode;
 
@@ -276,21 +273,20 @@ namespace PanzerGeneral2_0
                 }
                 
                 
-                if(AttackHistoryBox.Text.Length != 0)
+                if (AttackHistoryBox.Text.Length != 0)
                 {
                     AttackHistoryBox.Inlines.Add(new Run("\n\n"));
                 }
 
-                if(e.IsCounterattack)
+                if (e.IsCounterattack)
                 {
-
                     AttackHistoryBox.Inlines.Add(new Run($"{e.Attacker.UnitKind}") { 
                         Foreground = new SolidColorBrush((Color)ColorConverter.ConvertFromString(attackerColorCode)),
                         FontWeight = FontWeights.Bold});
                     AttackHistoryBox.Inlines.Add(new Run(" strikes back with "));
                     AttackHistoryBox.Inlines.Add(new Run($"{e.DamagePoints}") {FontWeight = FontWeights.Bold });
 
-                    if(e.Attacker == null)
+                    if (e.Attacker == null)
                     {
                         AttackHistoryBox.Inlines.Add(new Run(" points of damage and kills the attacker."));
                     }
@@ -333,13 +329,13 @@ namespace PanzerGeneral2_0
             }
         }
 
-        private void onPassButtonClick(object sender, RoutedEventArgs e)
+        private void OnPassButtonClick(object sender, RoutedEventArgs e)
         {
             GameplayFrame.NextTeam();
             GameplayFrame.ResetCheckedElements();
         }
 
-        private void onTeamChange(object sender, CustomEventArgs.TeamMovementEventArgs e)
+        private void OnTeamChange(object sender, CustomEventArgs.TeamMovementEventArgs e)
         {
             if(sender is HexBoard)
             {
@@ -356,7 +352,7 @@ namespace PanzerGeneral2_0
             }
         }
 
-        private void onGameOver(object sender, CustomEventArgs.GameOverEventArgs e)
+        private void OnGameOver(object sender, CustomEventArgs.GameOverEventArgs e)
         {
             if(sender is HexBoard)
             {
@@ -377,19 +373,19 @@ namespace PanzerGeneral2_0
 
                     new PanzerAlertDialog.Builder()
                            .SetMessage(message)
-                           .setOnPositiveClickButtonListener("YES", (btnSender, args) => {
+                           .SetOnPositiveClickButtonListener("YES", (btnSender, args) => {
 
                                AttackHistoryBox.Text = "";
                                GameplayFrame.ResetGame();
                                GameplayFrame.UnitDetailsWindow.Children.Clear();
                                _activeDialog = null;
                            })
-                           .setOnNegativeClickButtonListener("QUIT", (btnSender, args) => {
+                           .SetOnNegativeClickButtonListener("QUIT", (btnSender, args) => {
                                
                                Application.Current.Shutdown();
                            })
-                           .create()
-                           .attachToPanel(GameplayFrame.UnitDetailsWindow);
+                           .Create()
+                           .AttachToPanel(GameplayFrame.UnitDetailsWindow);
                 }
             }
         }

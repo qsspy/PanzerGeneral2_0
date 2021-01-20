@@ -4,8 +4,6 @@ using PanzerGeneral2_0.DataModels;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace PanzerGeneral2_0.Databases
 {
@@ -31,6 +29,9 @@ namespace PanzerGeneral2_0.Databases
             }
         }
 
+        /**
+         * Metoda usuwająca wszystkie jednostki na raz
+         */
         public void RemoveAllUnitsFromDB()
         {
             using(var _dbContext = new SqliteDbContext())
@@ -41,7 +42,9 @@ namespace PanzerGeneral2_0.Databases
         }
 
 
-        //Kiedy chcemy zapisac wszystkie jednostki za jednym zamachem
+        /**
+         * Metoda zapisująca wszystkie jednostki na raz
+         */
         public void InsertNewUnitSet(IEnumerable<HexPoint> listOfHexes, IEnumerable<Unit> movingUnits, IEnumerable<Unit> attackingUnits)
         {
             RemoveAllUnitsFromDB();
@@ -56,6 +59,9 @@ namespace PanzerGeneral2_0.Databases
             }
         }
 
+        /**
+         * Metoda zwracająca wszystkie jednostki na raz
+         */
         public IEnumerable<UnitModel> GetAllUnitsFromDb()
         {
             using(var _dbContext = new SqliteDbContext())
@@ -64,6 +70,9 @@ namespace PanzerGeneral2_0.Databases
             }
         }
 
+        /**
+         * Zapisz stan gry
+         */
         public void InsertGameStateToDb(Unit.TeamInfo? currentTurn, Unit.TeamInfo? winnerTeam, int roundCount)
         {
             using(var _dbContext = new SqliteDbContext())
@@ -81,6 +90,9 @@ namespace PanzerGeneral2_0.Databases
             }
         }
 
+        /**
+         * Sprawdź czy zapis jest w bazie
+         */
         public bool IsGameStateInDb()
         {
             using (var _dbContext = new SqliteDbContext())
@@ -89,6 +101,9 @@ namespace PanzerGeneral2_0.Databases
             }
         }
 
+        /**
+         * Usuń zapis z bazy danych
+         */
         public void RemoveGameStateFromDb()
         {
             using (var _dbContext = new SqliteDbContext())
@@ -99,7 +114,9 @@ namespace PanzerGeneral2_0.Databases
         }
 
 
-        //Wstawia aktualny stan gry do bazy
+        /**
+         * Wstaw aktualny stan gry do bazy
+         */
         public void UpdateGameStateInDb(Unit.TeamInfo? currentTurn, Unit.TeamInfo? winnerTeam, int roundCount)
         {
             if(IsGameStateInDb())
@@ -110,6 +127,9 @@ namespace PanzerGeneral2_0.Databases
             InsertGameStateToDb(currentTurn, winnerTeam, roundCount);
         }
 
+        /**
+         * Pobierz aktualny zapis gry
+         */
         public GameStateModel GetGameStateFromDb()
         {
             using(var _dbContext = new SqliteDbContext())

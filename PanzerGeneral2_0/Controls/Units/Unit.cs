@@ -38,7 +38,6 @@ namespace PanzerGeneral2_0.Controls.Units
         public string HpLabelColor { get; set; }
         public string TexturePath { get; set; }
 
-
         public TeamInfo TeamCode { get; set; }
         public UnitInfo UnitKind { get; set; }
         public int MaxAmmo { get; set; }
@@ -76,14 +75,13 @@ namespace PanzerGeneral2_0.Controls.Units
             {
                 Scale = -1;
                 HpLabelColor = TEAM_B_COLOR_CODE;
-            }
-            
+            }         
         }
 
         /**
-         * Efekt eksplozji
+         * Metoda wywołująca efekt strzału
         */
-        public void Explosion(bool isFinalExplosion)
+        public void PlayExplosionSound(bool isFinalExplosion)
         {
             UnmanagedMemoryStream sound;
 

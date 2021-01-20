@@ -1,17 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
 
 namespace PanzerGeneral2_0.Controls.Other
 {
@@ -34,7 +23,7 @@ namespace PanzerGeneral2_0.Controls.Other
                 return this;
             }
 
-            public Builder setOnPositiveClickButtonListener(string text, Action<object,EventArgs> listener)
+            public Builder SetOnPositiveClickButtonListener(string text, Action<object,EventArgs> listener)
             {
                 positiveButton = new Button();
                 positiveButton.Content = text;
@@ -44,7 +33,7 @@ namespace PanzerGeneral2_0.Controls.Other
                 return this;
             }
 
-            public Builder setOnNegativeClickButtonListener(string text, Action<object, EventArgs> listener)
+            public Builder SetOnNegativeClickButtonListener(string text, Action<object, EventArgs> listener)
             {
                 negativeButton = new Button();
                 negativeButton.Content = text;
@@ -54,19 +43,19 @@ namespace PanzerGeneral2_0.Controls.Other
                 return this;
             }
 
-            public PanzerAlertDialog create()
+            public PanzerAlertDialog Create()
             {
                 return new PanzerAlertDialog(this);
             }
 
-            public interface OnPositiveButtonClick {
+            public interface IOnPositiveButtonClick {
 
-                void execute(object sender, EventArgs e);
+                void Execute(object sender, EventArgs e);
             }
 
-            public interface OnNegativeButtonClick
+            public interface IOnNegativeButtonClick
             {
-                void execute(object sender, EventArgs e);
+                void Execute(object sender, EventArgs e);
             }
         }
 
@@ -85,7 +74,7 @@ namespace PanzerGeneral2_0.Controls.Other
             }
         }
 
-        public void attachToPanel(Panel panel)
+        public void AttachToPanel(Panel panel)
         {
             panel.Children.Add(this);
         }

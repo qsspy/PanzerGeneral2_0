@@ -12,10 +12,5 @@ namespace PanzerGeneral2_0.Controls.Other
         {
             InitializeComponent();
         }
-
-        private void Image_AnimationCompleted(object sender, RoutedEventArgs e)
-        {
-
-        }
     }
 }

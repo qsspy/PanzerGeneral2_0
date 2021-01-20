@@ -1,17 +1,7 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
 
 namespace PanzerGeneral2_0.Controls.Other
 {
@@ -30,51 +20,52 @@ namespace PanzerGeneral2_0.Controls.Other
                 _panzerLoadingDialog = new PanzerLoadingDialogControl();
             }
 
-            public Builder setWaitingMessage(string message)
+            public Builder SetWaitingMessage(string message)
             {
                 _panzerLoadingDialog.WaitingMessage = message;
                 return this;
             }
 
-            public Builder setFinishLoadingMessage(string message)
+            public Builder SetFinishLoadingMessage(string message)
             {
                 _panzerLoadingDialog.FinishLoadingMessage = message;
                 return this;
             }
 
-            public Builder setSimulatedWaitTime(int timeMilis)
+            public Builder SetSimulatedWaitTime(int timeMilis)
             {
                 _panzerLoadingDialog.SimulatedWaitTime = timeMilis;
                 return this;
             }
 
-            public Builder setConfirmButtonText(string text)
+            public Builder SetConfirmButtonText(string text)
             {
                 _panzerLoadingDialog.ConfirmButtonText = text;
                 return this;
             }
 
-            public Builder setOnLoadingListener(Action listener)
+            public Builder SetOnLoadingListener(Action listener)
             {
                 _panzerLoadingDialog.OnLoadingListener = listener;
                 return this;
             }
 
-            public Builder setOnFinishButtonClickListener(Action<object,EventArgs> listener)
+            public Builder SetOnFinishButtonClickListener(Action<object,EventArgs> listener)
             {
                 _panzerLoadingDialog.OnFinishButtonClickListener = listener;
                 return this;
             }
 
-            public PanzerLoadingDialogControl create()
+            public PanzerLoadingDialogControl Create()
             {
-                _panzerLoadingDialog.initailize();
+                _panzerLoadingDialog.Initailize();
                 return _panzerLoadingDialog;
             }
         }
 
         private int _dotCount = 1;
         private int _dotCountEditInterval = 200;
+
         public int SimulatedWaitTime { get; set; } = 0;
         public string WaitingMessage { get; set; } = "Loading";
         public string FinishLoadingMessage { get; set; } = "Loading Finished!";
@@ -83,10 +74,9 @@ namespace PanzerGeneral2_0.Controls.Other
         private bool _onLoadingTaskCompleted = false;
         public Action<object, EventArgs> OnFinishButtonClickListener { get; set; } = null;
 
-
         private PanzerLoadingDialogControl() {}
 
-        private void initailize()
+        private void Initailize()
         {
             InitializeComponent();
             Message.Text = WaitingMessage;
@@ -97,18 +87,16 @@ namespace PanzerGeneral2_0.Controls.Other
             }
         }
 
-
-
-        public void startLoading()
+        public void StartLoading()
         {
-            Task.Run(runWaitingMessageAnimation);
+            Task.Run(RunWaitingMessageAnimation);
             if(OnLoadingListener != null)
             {
-                Task.Run(executeLoadingTask);
+                Task.Run(ExecuteLoadingTask);
             }
         }
 
-        private async void runWaitingMessageAnimation()
+        private async void RunWaitingMessageAnimation()
         {
             long timeElapsed = 0;
 
@@ -134,16 +122,15 @@ namespace PanzerGeneral2_0.Controls.Other
                 Message.Text = FinishLoadingMessage;
                 FinishButton.Visibility = Visibility.Visible;
             }));
-
         }
 
-        private void executeLoadingTask()
+        private void ExecuteLoadingTask()
         {
             OnLoadingListener?.Invoke();
             _onLoadingTaskCompleted = true;
         }
 
-        public PanzerLoadingDialogControl attachToPanel(Panel panel)
+        public PanzerLoadingDialogControl AttachToPanel(Panel panel)
         {
             panel.Children.Add(this);
             return this;
